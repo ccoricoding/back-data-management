@@ -1,93 +1,64 @@
 // Vercel Serverless Function to fetch Supabase database usage
-// Uses Management API to get comprehensive project usage data (DB + Storage)
+// Advanced Debugging Version: Checks Project Access before fetching Usage
 
 export default async function handler(req, res) {
-    // Only allow GET requests
     if (req.method !== 'GET') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    // Use environment variables (without VITE_ prefix for serverless functions)
-    // Trim strictly to avoid copy-paste whitespace issues which cause 401s
     const projectId = (process.env.SUPABASE_PROJECT_ID || process.env.VITE_SUPABASE_PROJECT_ID || '').trim();
     const apiKey = (process.env.SUPABASE_MANAGEMENT_API_KEY || process.env.VITE_SUPABASE_MANAGEMENT_API_KEY || '').trim();
 
-    // Validate credentials
     if (!projectId || !apiKey) {
-        console.error('Missing credentials in Vercel env vars');
-        return res.status(500).json({
-            error: 'Supabase credentials not configured',
-            details: 'Please set SUPABASE_PROJECT_ID and SUPABASE_MANAGEMENT_API_KEY in Vercel Settings'
-        });
+        return res.status(500).json({ error: 'Missing Credentials' });
     }
 
     try {
-        console.log(`Debug Info:`);
-        console.log(`- Project ID: ${projectId} (Length: ${projectId.length})`);
+        console.log(`Debug: Checking credentials...`);
+        console.log(`- Project: ${projectId}`);
+        console.log(`- Key Prefix: ${apiKey.substring(0, 4)}...`);
 
-        // Safety check prefix
-        const keyPrefix = apiKey ? apiKey.substring(0, 4) : 'null';
-        console.log(`- API Key Prefix: ${keyPrefix}`);
-        console.log(`- API Key Length: ${apiKey ? apiKey.length : 0}`);
+        // 1. Test Basic Project Access (Is the token valid for this project?)
+        const projectCheck = await fetch(`https://api.supabase.com/v1/projects/${projectId}`, {
+            headers: { 'Authorization': `Bearer ${apiKey}` }
+        });
 
-        // Warn if key looks suspicious
-        if (!apiKey.startsWith('sbp_')) {
-            throw new Error(`Invalid API Key format. Starts with '${keyPrefix}', expected 'sbp_'. Check Vercel Env Vars.`);
+        if (!projectCheck.ok) {
+            const errorText = await projectCheck.text();
+            // If this fails, the token truly cannot see the project
+            throw new Error(`Basic Access Failed (${projectCheck.status}): ${errorText}`);
+        } else {
+            console.log('Debug: Basic Project Access OK!');
         }
 
-        const response = await fetch(
-            `https://api.supabase.com/v1/projects/${projectId}/usage`,
-            {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${apiKey}`,
-                    'Content-Type': 'application/json'
-                }
-            }
-        );
+        // 2. If basic access works, try fetching Usage
+        const usageResponse = await fetch(`https://api.supabase.com/v1/projects/${projectId}/usage`, {
+            headers: { 'Authorization': `Bearer ${apiKey}` }
+        });
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error(`Supabase API Error (${response.status}): ${errorText}`);
-
-            if (response.status === 401) {
-                // Return exact details to help user fix it
-                throw new Error(`Unauthorized (401). Key Length: ${apiKey.length}. Msg: ${errorText}. Check if Project ID '${projectId}' belongs to this Token.`);
-            } else if (response.status === 404) {
-                throw new Error(`Project Not Found (404). Check if SUPABASE_PROJECT_ID (${projectId}) is correct.`);
-            }
-
-            throw new Error(`API request failed: ${response.status} - ${errorText}`);
+        if (!usageResponse.ok) {
+            const errorText = await usageResponse.text();
+            // If basic worked but usage failed, the endpoint might be wrong/blocked
+            throw new Error(`Usage Endpoint Failed (${usageResponse.status}): ${errorText}`);
         }
 
-        const data = await response.json();
+        const data = await usageResponse.json();
 
-        // Calculate total usage (DB + Storage)
         const dbUsageBytes = data.db_size?.usage || 0;
         const storageUsageBytes = data.storage_size?.usage || 0;
-
-        // Convert to MB
         const totalUsageMB = (dbUsageBytes + storageUsageBytes) / (1024 * 1024);
-        const limitMB = (data.db_size?.limit || 524288000) / (1024 * 1024); // Default 500MB
-
-        const percentage = (totalUsageMB / limitMB) * 100;
+        const limitMB = (data.db_size?.limit || 524288000) / (1024 * 1024);
 
         return res.status(200).json({
             usage: totalUsageMB,
             limit: limitMB,
-            percentage: percentage,
-            details: {
-                database: dbUsageBytes / (1024 * 1024),
-                storage: storageUsageBytes / (1024 * 1024)
-            }
+            percentage: (totalUsageMB / limitMB) * 100
         });
+
     } catch (error) {
-        console.error('Failed to fetch database usage:', error.message);
+        console.error('Final Error:', error.message);
         return res.status(500).json({
-            error: error.message,
-            usage: 0,
-            limit: 500,
-            percentage: 0
+            error: error.message
         });
     }
 }
