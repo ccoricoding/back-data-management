@@ -2,23 +2,23 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { db } from '../services/db';
 import { useYear } from '../context/YearContext';
 import { useAuth } from '../context/AuthContext';
-import { BookOpen, Lightbulb, Calendar as CalendarIcon } from 'lucide-react';
+import { BookOpen, Calendar as CalendarIcon, Database } from 'lucide-react';
 
 export default function Dashboard() {
     const [allData, setAllData] = useState([]);
     const [dbUsage, setDbUsage] = useState({ usage: 0, limit: 500, percentage: 0 });
     const [dbUsageLoaded, setDbUsageLoaded] = useState(false);
-    const { selectedYear } = useYear();
-    const { user } = useAuth();
 
-    // Fetch database usage from our backend API (avoids CORS issues)
+    const { selectedYear } = useYear();
+    const { user } = useAuth(); // Get user context for library-specific data
+
+    // Fetch database usage from serverless function
     useEffect(() => {
         const fetchDbUsage = async () => {
             try {
                 const response = await fetch('/api/db-usage');
 
                 if (!response.ok) {
-                    // Try to parse error details
                     const errorText = await response.text();
                     let errorMessage = `API status: ${response.status}`;
                     try {
@@ -27,7 +27,8 @@ export default function Dashboard() {
                     } catch (e) {
                         errorMessage += ` - ${errorText}`;
                     }
-                    throw new Error(errorMessage);
+                    console.warn(errorMessage); // Log but don't crash
+                    return;
                 }
 
                 const data = await response.json();
@@ -39,82 +40,73 @@ export default function Dashboard() {
                 });
                 setDbUsageLoaded(true);
 
-                if (data.debug_raw_project) {
-                    console.log('🔍 [DEBUG] FULL PROJECT METADATA:', data.debug_raw_project);
-                }
-                if (data.debug_raw) {
-                    console.log('🔍 [DEBUG] RAW API DATA:', data.debug_raw);
-                }
+                // Pure usage log
+                console.log(`DB Usage: ${data.usage?.toFixed(2)}MB / ${data.limit}MB`);
 
-                console.log(`DB Usage: ${data.usage.toFixed(2)}MB / ${data.limit}MB (${data.percentage.toFixed(1)}%)`);
             } catch (error) {
-                console.error('Failed to fetch database usage details:', error.message);
-                setDbUsageLoaded(false);
+                console.error('Failed to fetch database usage:', error);
             }
         };
 
         fetchDbUsage();
     }, []);
 
+    // Load main data based on year and user library
     useEffect(() => {
         const loadData = async () => {
             console.log('Dashboard: Loading data for year:', selectedYear, 'library:', user?.libraryName);
+            // Pass libraryName filter if user is not admin (or based on business logic)
+            // Assuming getData handles undefined libraryName for admins
             const data = await db.getData(selectedYear, user?.libraryName);
             console.log('Dashboard: Loaded data:', data.length, 'entries');
             setAllData(data);
         };
-        if (user?.libraryName) {
+
+        // Wait for user to be loaded if checking auth (optional optimization)
+        if (user !== undefined) {
             loadData();
         }
-    }, [selectedYear, user]);
+    }, [selectedYear, user]); // Reload when year or user changes
 
-    // Summary Calculations
+    // Summary Calculations (Memoized)
     const summaryStats = useMemo(() => {
         console.log('Dashboard: Calculating stats for', allData.length, 'items');
-
         const stats = {
             education: { count: 0, sessions: 0, budget: 0, people: 0 },
             event: { count: 0, sessions: 0, budget: 0, people: 0 }
         };
 
-        allData.forEach((item, index) => {
+        allData.forEach(item => {
             const category = item.overview?.category || '';
-            console.log(`Item ${index}: category="${category}"`);
-
             const isEducation = category.startsWith('평생교육강좌');
             const isEvent = category.startsWith('독서문화행사');
 
-            if (!isEducation && !isEvent) {
-                console.log(`  -> Skipped (not education or event)`);
-                return;
-            }
+            if (!isEducation && !isEvent) return;
 
             const target = isEducation ? stats.education : stats.event;
-            const targetName = isEducation ? 'education' : 'event';
 
+            // Count & Sessions
             target.count += 1;
             target.sessions += Number(item.overview?.count || 0);
 
-            console.log(`  -> ${targetName}: count=${target.count}, sessions=${target.sessions}`);
-
-            // Calculate budget from budgetItems array (v5 is the semok column)
+            // Budget (Check 'v5' semok codes)
             if (item.budgetItems && Array.isArray(item.budgetItems)) {
                 item.budgetItems.forEach(bi => {
                     const semok = bi.v5 || '';
+                    // 210-01: Common op, 210-06: Material, 310-06: Education op
                     if (['210-01', '210-06', '310-06'].includes(semok)) {
                         target.budget += Number(bi.amount || 0);
                     }
                 });
-                console.log(`  -> budget=${target.budget}`);
             }
 
+            // Participants
             if (item.performances && Array.isArray(item.performances)) {
                 item.performances.forEach(perf => {
-                    target.people += (perf.adultM || 0) + (perf.adultF || 0) +
-                        (perf.teenM || 0) + (perf.teenF || 0) +
-                        (perf.childM || 0) + (perf.childF || 0);
+                    target.people += (Number(perf.adultM) || 0) + (Number(perf.adultF) || 0) +
+                        (Number(perf.teenM) || 0) + (Number(perf.teenF) || 0) +
+                        (Number(perf.childM) || 0) + (Number(perf.childF) || 0);
                 });
-                console.log(`  -> people=${target.people}`);
             }
         });
 
@@ -122,78 +114,80 @@ export default function Dashboard() {
         return stats;
     }, [allData, selectedYear]);
 
+    // Component: Stat Card
     const StatCard = ({ title, icon: Icon, stats, color, labels }) => (
-        <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
-            <div className={`${color} p-4`}>
-                <div className="flex items-center gap-3">
-                    <div className="bg-white/20 p-2 rounded-lg">
-                        <Icon className="text-white" size={24} />
-                    </div>
-                    <h3 className="text-white font-bold text-lg">{title}</h3>
-                </div>
+        <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-shadow duration-300">
+            <div className={`p-4 ${color} bg-opacity-10 border-b border-gray-100 flex items-center justify-between`}>
+                <h3 className="font-bold text-gray-800 flex items-center gap-2">
+                    <Icon className={`w-5 h-5 ${color.replace('bg-', 'text-')}`} />
+                    {title}
+                </h3>
             </div>
-            <div className="p-4 grid grid-cols-2 gap-4">
-                <div className="text-center p-3 bg-slate-50 rounded-lg">
-                    <p className="text-xs text-slate-500 mb-1">{labels[0]}</p>
-                    <p className="text-2xl font-bold text-slate-800">{stats.count.toLocaleString()}<span className="text-sm font-normal text-slate-500 ml-1">개</span></p>
-                </div>
-                <div className="text-center p-3 bg-slate-50 rounded-lg">
-                    <p className="text-xs text-slate-500 mb-1">{labels[1]}</p>
-                    <p className="text-2xl font-bold text-slate-800">{stats.sessions.toLocaleString()}<span className="text-sm font-normal text-slate-500 ml-1">회</span></p>
-                </div>
-                <div className="text-center p-3 bg-slate-50 rounded-lg">
-                    <p className="text-xs text-slate-500 mb-1">예산</p>
-                    <p className="text-2xl font-bold text-slate-800">{stats.budget.toLocaleString()}<span className="text-sm font-normal text-slate-500 ml-1">원</span></p>
-                </div>
-                <div className="text-center p-3 bg-slate-50 rounded-lg">
-                    <p className="text-xs text-slate-500 mb-1">인원</p>
-                    <p className="text-2xl font-bold text-slate-800">{stats.people.toLocaleString()}<span className="text-sm font-normal text-slate-500 ml-1">명</span></p>
+            <div className="p-6">
+                <div className="grid grid-cols-2 gap-6">
+                    <div>
+                        <p className="text-sm text-gray-500 mb-1">{labels[0]}</p>
+                        <p className="text-2xl font-bold text-gray-800">{stats.count.toLocaleString()}개</p>
+                    </div>
+                    <div>
+                        <p className="text-sm text-gray-500 mb-1">{labels[1]}</p>
+                        <p className="text-2xl font-bold text-gray-800">{stats.sessions.toLocaleString()}회</p>
+                    </div>
+                    <div>
+                        <p className="text-sm text-gray-500 mb-1">{labels[2]}</p>
+                        <p className="text-2xl font-bold text-gray-800">{(stats.people).toLocaleString()}명</p>
+                    </div>
+                    <div>
+                        <p className="text-sm text-gray-500 mb-1">{labels[3]}</p>
+                        <p className="text-2xl font-bold text-gray-800">{(stats.budget / 1000).toLocaleString()}천원</p>
+                    </div>
                 </div>
             </div>
         </div>
     );
 
     return (
-        <div className="space-y-6">
-            {/* Summary Cards */}
+        <div className="space-y-6 relative pb-10"> {/* Added pb-10 for bottom widget space */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <StatCard
                     title="평생교육강좌"
-                    icon={Lightbulb}
+                    icon={BookOpen}
                     stats={summaryStats.education}
-                    color="bg-gradient-to-r from-indigo-500 to-indigo-600"
-                    labels={['강좌', '횟수']}
+                    color="bg-blue-500"
+                    labels={['운영 강좌', '운영 횟수', '참여 인원', '집행 예산']}
                 />
+
                 <StatCard
                     title="독서문화행사"
-                    icon={BookOpen}
+                    icon={CalendarIcon}
                     stats={summaryStats.event}
-                    color="bg-gradient-to-r from-emerald-500 to-emerald-600"
-                    labels={['행사', '횟수']}
+                    color="bg-green-500"
+                    labels={['운영 행사', '운영 횟수', '참여 인원', '집행 예산']}
                 />
             </div>
 
-            {/* Database Usage Widget - Minimal Style */}
-            {/* Database Usage Widget - Transparent & Minimal */}
-            <div className="flex justify-end mt-4">
-                <div className="w-48 px-2">
-                    <div className="flex justify-end items-center mb-1.5">
-                        <span className="text-[10px] font-bold text-slate-500">
+            {/* Database Usage Widget - Bottom Right Fixed/Absolute */}
+            {dbUsageLoaded && (
+                <div className="fixed bottom-4 right-4 bg-white/80 backdrop-blur-sm p-3 rounded-lg shadow-sm border border-gray-200 flex items-center gap-3 text-xs z-50 hover:opacity-100 transition-opacity">
+
+                    <div className="flex flex-col items-end">
+                        {/* Text: 25.33 MB / 500 MB */}
+                        <div className="font-medium text-gray-600 mb-1">
                             {dbUsage.usage.toFixed(2)} MB / {dbUsage.limit} MB
-                        </span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-1.5 overflow-hidden">
-                        <div
-                            className={`h-1.5 rounded-full transition-all duration-500 ${dbUsage.percentage > 80 ? 'bg-red-500' :
-                                dbUsage.percentage > 60 ? 'bg-yellow-500' :
-                                    'bg-green-500'
-                                }`}
-                            style={{ width: `${Math.min(dbUsage.percentage, 100)}%` }}
-                        />
+                        </div>
+
+                        {/* Progress Bar */}
+                        <div className="w-24 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                            <div
+                                className={`h-full rounded-full ${dbUsage.percentage > 90 ? 'bg-red-500' :
+                                        dbUsage.percentage > 70 ? 'bg-yellow-500' : 'bg-green-500'
+                                    }`}
+                                style={{ width: `${Math.min(dbUsage.percentage, 100)}%` }}
+                            />
+                        </div>
                     </div>
                 </div>
-            </div>
+            )}
         </div>
     );
 }
-
