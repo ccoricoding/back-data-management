@@ -69,7 +69,12 @@ export default function Calendar() {
 
     // Update currentDate if selectedYear changes
     useEffect(() => {
-        setCurrentDate(new Date(selectedYear, 0, 1)); // Jan 1st of selected year
+        const now = new Date();
+        if (selectedYear === now.getFullYear()) {
+            setCurrentDate(new Date()); // Current year -> Current month
+        } else {
+            setCurrentDate(new Date(selectedYear, 0, 1)); // Other year -> Jan 1st
+        }
     }, [selectedYear]);
 
     const year = currentDate.getFullYear();

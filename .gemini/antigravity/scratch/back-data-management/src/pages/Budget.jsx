@@ -156,16 +156,48 @@ export default function Budget() {
             <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100">
                 <div className="overflow-x-auto">
                     <table className="min-w-full">
-                        <thead>
-                            <tr className="bg-gray-50 text-xs text-gray-700 uppercase">
-                                <th className="px-3 py-2 border border-gray-200 whitespace-nowrap text-center text-xs font-normal">구분</th>
-                                <th className="px-3 py-2 border border-gray-200 whitespace-nowrap text-center text-xs font-normal">사업내역(대)</th>
-                                <th className="px-3 py-2 border border-gray-200 whitespace-nowrap text-center text-xs font-normal">사업내역(중)</th>
-                                <th className="px-3 py-2 border border-gray-200 whitespace-nowrap text-center text-xs font-normal">사업내역(소)</th>
-                                <th className="px-3 py-2 border border-gray-200 whitespace-nowrap text-center text-xs font-normal">목-세목</th>
-                                <th className="px-3 py-2 border border-gray-200 whitespace-nowrap text-center text-xs font-normal">배정금액</th>
-                                <th className="px-3 py-2 border border-gray-200 whitespace-nowrap text-center text-xs font-normal">지출금액</th>
-                                <th className="px-3 py-2 border border-gray-200 whitespace-nowrap text-center text-xs font-normal">잔액</th>
+                        <thead className="bg-gray-50 text-xs text-gray-700 uppercase">
+                            <tr>
+                                <th className="px-3 py-2 border border-gray-200 whitespace-nowrap text-center">
+                                    <div className="flex justify-center items-center gap-1">
+                                        <span className="text-xs">구분</span>
+                                    </div>
+                                </th>
+                                <th className="px-3 py-2 border border-gray-200 whitespace-nowrap text-center">
+                                    <div className="flex justify-center items-center gap-1">
+                                        <span className="text-xs">사업내역(대)</span>
+                                    </div>
+                                </th>
+                                <th className="px-3 py-2 border border-gray-200 whitespace-nowrap text-center">
+                                    <div className="flex justify-center items-center gap-1">
+                                        <span className="text-xs">사업내역(중)</span>
+                                    </div>
+                                </th>
+                                <th className="px-3 py-2 border border-gray-200 whitespace-nowrap text-center">
+                                    <div className="flex justify-center items-center gap-1">
+                                        <span className="text-xs">사업내역(소)</span>
+                                    </div>
+                                </th>
+                                <th className="px-3 py-2 border border-gray-200 whitespace-nowrap text-center">
+                                    <div className="flex justify-center items-center gap-1">
+                                        <span className="text-xs">목-세목</span>
+                                    </div>
+                                </th>
+                                <th className="px-3 py-2 border border-gray-200 whitespace-nowrap text-center">
+                                    <div className="flex justify-center items-center gap-1">
+                                        <span className="text-xs">배정금액</span>
+                                    </div>
+                                </th>
+                                <th className="px-3 py-2 border border-gray-200 whitespace-nowrap text-center">
+                                    <div className="flex justify-center items-center gap-1">
+                                        <span className="text-xs">지출금액</span>
+                                    </div>
+                                </th>
+                                <th className="px-3 py-2 border border-gray-200 whitespace-nowrap text-center">
+                                    <div className="flex justify-center items-center gap-1">
+                                        <span className="text-xs">잔액</span>
+                                    </div>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>

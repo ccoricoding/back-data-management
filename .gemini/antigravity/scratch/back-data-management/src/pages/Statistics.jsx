@@ -26,7 +26,12 @@ export default function Statistics() {
 
     // Update currentDate if selectedYear changes
     useEffect(() => {
-        setCurrentDate(new Date(selectedYear, 0, 1)); // Jan 1st of selected year
+        const now = new Date();
+        if (selectedYear === now.getFullYear()) {
+            setCurrentDate(new Date()); // Current year -> Current month
+        } else {
+            setCurrentDate(new Date(selectedYear, 0, 1)); // Other year -> Jan 1st
+        }
     }, [selectedYear]);
 
     useEffect(() => {
@@ -215,9 +220,11 @@ export default function Statistics() {
 
     if (loading) return <div className="p-8 text-center"></div>;
 
-    <th rowSpan={rowSpan} colSpan={colSpan} className={`px-4 py-3 text-xs font-bold text-gray-600 uppercase tracking-wider text-center min-w-[90px] ${className}`}>
-        {children}
-    </th>
+    const Th = ({ children, className, rowSpan, colSpan }) => (
+        <th rowSpan={rowSpan} colSpan={colSpan} className={`px-4 py-3 text-xs font-bold text-gray-600 uppercase tracking-wider text-center min-w-[90px] ${className}`}>
+            {children}
+        </th>
+    );
 
     const Td = ({ children, className, isTotal }) => (
         <td className={`px-4 py-3 text-sm text-gray-700 text-center ${isTotal ? 'bg-gray-50 font-bold' : ''} ${className}`}>

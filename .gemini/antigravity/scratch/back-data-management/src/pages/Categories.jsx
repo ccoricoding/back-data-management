@@ -481,10 +481,10 @@ export default function Categories() {
                     // I will override the theme usage for the HEADER div.
 
                     const theme = THEMES[index % THEMES.length];
-                    const headerClass = 'bg-gray-50'; // Fixed gray header
+                    const headerClass = 'bg-slate-200'; // Darker gray per request
                     return (
                         <div key={key} className={`bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col h-full hover:shadow-md transition-shadow ${className || ''}`}>
-                            <div className={`${headerClass} p-4 border-b border-gray-200 flex justify-between items-center`}>
+                            <div className={`${headerClass} px-4 py-2 border-b border-gray-200 flex justify-between items-center`}>
                                 <h3 className="font-semibold text-slate-700">{key}</h3>
                                 <button
                                     onClick={() => handleAddItem(key)}
