@@ -71,10 +71,12 @@ export default function Calendar() {
     const renderCalendarCells = () => {
         const cells = [];
 
+        // Empty cells before first day
         for (let i = 0; i < firstDay; i++) {
             cells.push(<div key={`empty-${i}`} className="bg-slate-50 h-28 border border-slate-100"></div>);
         }
 
+        // Days of the month
         for (let d = 1; d <= daysInMonth; d++) {
             const dateStr = `${year}-${(month + 1).toString().padStart(2, '0')}-${d.toString().padStart(2, '0')}`;
             const events = calendarData[dateStr] || [];
@@ -108,6 +110,15 @@ export default function Calendar() {
                     </div>
                 </div>
             );
+        }
+
+        // Empty cells after last day
+        const totalSlots = firstDay + daysInMonth;
+        const remainder = totalSlots % 7;
+        const trailingEmpty = remainder === 0 ? 0 : 7 - remainder;
+
+        for (let i = 0; i < trailingEmpty; i++) {
+            cells.push(<div key={`empty-end-${i}`} className="bg-slate-50 h-28 border border-slate-100"></div>);
         }
 
         return cells;

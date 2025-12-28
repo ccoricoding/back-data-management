@@ -249,7 +249,7 @@ export default function Statistics() {
                     <table className="min-w-full border-collapse">
                         <thead>
                             <tr>
-                                <Th rowSpan={2} className="sticky left-0 bg-gray-50 z-10 w-32">구분</Th>
+                                <Th rowSpan={2} className="sticky left-0 bg-slate-200 z-10 w-32">구분</Th>
                                 <Th colSpan={3} className="bg-indigo-100 text-indigo-900">성인</Th>
                                 <Th colSpan={3} className="bg-indigo-100 text-indigo-900">중고생</Th>
                                 <Th colSpan={3} className="bg-indigo-100 text-indigo-900">어린이</Th>
@@ -266,7 +266,7 @@ export default function Statistics() {
                         </thead>
                         <tbody>
                             <tr>
-                                <td className="px-4 py-3 text-sm text-gray-700 bg-white sticky left-0 text-center border-b border-gray-100">
+                                <td className="px-4 py-3 text-sm text-gray-700 bg-slate-50 sticky left-0 text-center border-b border-gray-100">
                                     평생교육강좌
                                 </td>
                                 <Td>{stats.edu.adultM}</Td>
@@ -283,7 +283,7 @@ export default function Statistics() {
                                 <Td className="bg-green-50 text-green-700 font-bold ">{stats.edu.total}</Td>
                             </tr>
                             <tr>
-                                <td className="px-4 py-3 text-sm text-gray-700 bg-white sticky left-0 text-center border-b border-gray-100">
+                                <td className="px-4 py-3 text-sm text-gray-700 bg-slate-50 sticky left-0 text-center border-b border-gray-100">
                                     독서문화행사
                                 </td>
                                 <Td>{stats.event.adultM}</Td>
@@ -300,7 +300,7 @@ export default function Statistics() {
                                 <Td className="bg-green-50 text-green-700 font-bold ">{stats.event.total}</Td>
                             </tr>
                             <tr className="bg-slate-100">
-                                <td className="px-4 py-3 text-sm text-gray-700 bg-gray-50 sticky left-0 text-center border-t border-gray-200">
+                                <td className="px-4 py-3 text-sm text-gray-700 bg-slate-200 sticky left-0 text-center border-t border-gray-200">
                                     합계
                                 </td>
                                 <Td isTotal>{stats.total.adultM}</Td>
