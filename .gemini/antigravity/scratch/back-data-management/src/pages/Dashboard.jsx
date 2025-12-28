@@ -6,48 +6,12 @@ import { BookOpen, Lightbulb, Calendar as CalendarIcon } from 'lucide-react';
 
 export default function Dashboard() {
     const [allData, setAllData] = useState([]);
-    const [dbUsage, setDbUsage] = useState({ usage: 0, limit: 500, percentage: 0 });
-    const [dbUsageLoaded, setDbUsageLoaded] = useState(false);
+
     const { selectedYear } = useYear();
     const { user } = useAuth();
 
-    // Fetch database usage from our backend API (avoids CORS issues)
-    useEffect(() => {
-        const fetchDbUsage = async () => {
-            try {
-                const response = await fetch('/api/db-usage');
+    // Data loading effect
 
-                if (!response.ok) {
-                    // Try to parse error details
-                    const errorText = await response.text();
-                    let errorMessage = `API status: ${response.status}`;
-                    try {
-                        const errorJson = JSON.parse(errorText);
-                        errorMessage += ` - ${errorJson.error || errorText}`;
-                    } catch (e) {
-                        errorMessage += ` - ${errorText}`;
-                    }
-                    throw new Error(errorMessage);
-                }
-
-                const data = await response.json();
-
-                setDbUsage({
-                    usage: data.usage || 0,
-                    limit: data.limit || 500,
-                    percentage: data.percentage || 0
-                });
-                setDbUsageLoaded(true);
-
-                console.log(`DB Usage: ${data.usage.toFixed(2)}MB / ${data.limit}MB (${data.percentage.toFixed(1)}%)`);
-            } catch (error) {
-                console.error('Failed to fetch database usage details:', error.message);
-                setDbUsageLoaded(false);
-            }
-        };
-
-        fetchDbUsage();
-    }, []);
 
     useEffect(() => {
         const loadData = async () => {
@@ -166,26 +130,6 @@ export default function Dashboard() {
                 />
             </div>
 
-            {/* Database Usage Widget - Minimal Style */}
-            {/* Database Usage Widget - Transparent & Minimal */}
-            <div className="flex justify-end mt-4">
-                <div className="w-48 px-2">
-                    <div className="flex justify-end items-center mb-1.5">
-                        <span className="text-[10px] font-bold text-slate-500">
-                            {dbUsage.usage.toFixed(2)} MB / {dbUsage.limit} MB
-                        </span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-1.5 overflow-hidden">
-                        <div
-                            className={`h-1.5 rounded-full transition-all duration-500 ${dbUsage.percentage > 80 ? 'bg-red-500' :
-                                dbUsage.percentage > 60 ? 'bg-yellow-500' :
-                                    'bg-green-500'
-                                }`}
-                            style={{ width: `${Math.min(dbUsage.percentage, 100)}%` }}
-                        />
-                    </div>
-                </div>
-            </div>
         </div>
     );
 }
