@@ -263,19 +263,19 @@ export default function Statistics() {
                     <table className="min-w-full border-collapse">
                         <thead>
                             <tr>
-                                <Th rowSpan={2} className="sticky left-0 bg-[#d5f7c9] z-10 w-32 border-b border-white/50 text-slate-800">구분</Th>
-                                <Th colSpan={3} className="bg-[#d5f7c9] text-slate-800 border-b border-white/50">성인</Th>
-                                <Th colSpan={3} className="bg-[#d5f7c9] text-slate-800 border-b border-white/50">중고생</Th>
-                                <Th colSpan={3} className="bg-[#d5f7c9] text-slate-800 border-b border-white/50">어린이</Th>
-                                <Th colSpan={3} className="bg-[#d5f7c9] text-slate-800 border-b border-white/50">합계</Th>
+                                <Th rowSpan={2} className="sticky left-0 bg-slate-200 z-10 w-32 border-b border-white/50 text-slate-800">구분</Th>
+                                <Th colSpan={3} className="bg-indigo-100 text-slate-800 border-b border-indigo-200">성인</Th>
+                                <Th colSpan={3} className="bg-indigo-100 text-slate-800 border-b border-indigo-200">중고생</Th>
+                                <Th colSpan={3} className="bg-indigo-100 text-slate-800 border-b border-indigo-200">어린이</Th>
+                                <Th colSpan={3} className="bg-green-100 text-slate-800 border-b border-green-200">합계</Th>
                             </tr>
                             <tr>
-                                <Th className="bg-[#d5f7c9] text-slate-800">남</Th><Th className="bg-[#d5f7c9] text-slate-800">여</Th><Th className="bg-[#d5f7c9] text-slate-800 font-bold">소계</Th>
-                                <Th className="bg-[#d5f7c9] text-slate-800">남</Th><Th className="bg-[#d5f7c9] text-slate-800">여</Th><Th className="bg-[#d5f7c9] text-slate-800 font-bold">소계</Th>
-                                <Th className="bg-[#d5f7c9] text-slate-800">남</Th><Th className="bg-[#d5f7c9] text-slate-800">여</Th><Th className="bg-[#d5f7c9] text-slate-800 font-bold">소계</Th>
-                                <Th className="bg-[#d5f7c9] text-slate-800">남</Th>
-                                <Th className="bg-[#d5f7c9] text-slate-800">여</Th>
-                                <Th className="bg-[#d5f7c9] text-slate-800 font-bold">합계</Th>
+                                <Th className="bg-indigo-50 text-slate-800">남</Th><Th className="bg-indigo-50 text-slate-800">여</Th><Th className="bg-indigo-100 text-slate-800 font-bold">소계</Th>
+                                <Th className="bg-indigo-50 text-slate-800">남</Th><Th className="bg-indigo-50 text-slate-800">여</Th><Th className="bg-indigo-100 text-slate-800 font-bold">소계</Th>
+                                <Th className="bg-indigo-50 text-slate-800">남</Th><Th className="bg-indigo-50 text-slate-800">여</Th><Th className="bg-indigo-100 text-slate-800 font-bold">소계</Th>
+                                <Th className="bg-green-50 text-slate-800">남</Th>
+                                <Th className="bg-green-50 text-slate-800">여</Th>
+                                <Th className="bg-green-100 text-slate-800 font-bold">합계</Th>
                             </tr>
                         </thead>
                         <tbody>
@@ -285,16 +285,16 @@ export default function Statistics() {
                                 </td>
                                 <Td>{stats.edu.adultM}</Td>
                                 <Td>{stats.edu.adultF}</Td>
-                                <Td className="bg-indigo-50 font-semibold">{stats.edu.adultSum}</Td>
+                                <Td className="bg-indigo-50 font-bold text-slate-800">{stats.edu.adultSum}</Td>
                                 <Td>{stats.edu.teenM}</Td>
                                 <Td>{stats.edu.teenF}</Td>
-                                <Td className="bg-indigo-50 font-semibold">{stats.edu.teenSum}</Td>
+                                <Td className="bg-indigo-50 font-bold text-slate-800">{stats.edu.teenSum}</Td>
                                 <Td>{stats.edu.childM}</Td>
                                 <Td>{stats.edu.childF}</Td>
-                                <Td className="bg-indigo-50 font-semibold">{stats.edu.childSum}</Td>
+                                <Td className="bg-indigo-50 font-bold text-slate-800">{stats.edu.childSum}</Td>
                                 <Td>{stats.edu.maleSum}</Td>
                                 <Td>{stats.edu.femaleSum}</Td>
-                                <Td className="bg-green-50 text-green-700 font-bold ">{stats.edu.total}</Td>
+                                <Td className="bg-green-50 font-bold text-slate-800">{stats.edu.total}</Td>
                             </tr>
                             <tr>
                                 <td className="px-4 py-3 text-sm text-gray-700 bg-slate-50 sticky left-0 text-center border-b border-gray-100 font-bold tracking-wider">
@@ -302,16 +302,16 @@ export default function Statistics() {
                                 </td>
                                 <Td>{stats.event.adultM}</Td>
                                 <Td>{stats.event.adultF}</Td>
-                                <Td className="bg-indigo-50 font-semibold">{stats.event.adultSum}</Td>
+                                <Td className="bg-indigo-50 font-bold text-slate-800">{stats.event.adultSum}</Td>
                                 <Td>{stats.event.teenM}</Td>
                                 <Td>{stats.event.teenF}</Td>
-                                <Td className="bg-indigo-50 font-semibold">{stats.event.teenSum}</Td>
+                                <Td className="bg-indigo-50 font-bold text-slate-800">{stats.event.teenSum}</Td>
                                 <Td>{stats.event.childM}</Td>
                                 <Td>{stats.event.childF}</Td>
-                                <Td className="bg-indigo-50 font-semibold">{stats.event.childSum}</Td>
+                                <Td className="bg-indigo-50 font-bold text-slate-800">{stats.event.childSum}</Td>
                                 <Td>{stats.event.maleSum}</Td>
                                 <Td>{stats.event.femaleSum}</Td>
-                                <Td className="bg-green-50 text-green-700 font-bold ">{stats.event.total}</Td>
+                                <Td className="bg-green-50 font-bold text-slate-800">{stats.event.total}</Td>
                             </tr>
                             <tr className="bg-slate-100">
                                 <td className="px-4 py-3 text-sm text-gray-700 bg-slate-200 sticky left-0 text-center border-t border-gray-200 font-bold tracking-wider">
@@ -319,16 +319,16 @@ export default function Statistics() {
                                 </td>
                                 <Td isTotal>{stats.total.adultM}</Td>
                                 <Td isTotal>{stats.total.adultF}</Td>
-                                <Td className="bg-indigo-100 font-bold">{stats.total.adultSum}</Td>
+                                <Td className="bg-indigo-100 font-bold text-slate-800">{stats.total.adultSum}</Td>
                                 <Td isTotal>{stats.total.teenM}</Td>
                                 <Td isTotal>{stats.total.teenF}</Td>
-                                <Td className="bg-indigo-100 font-bold">{stats.total.teenSum}</Td>
+                                <Td className="bg-indigo-100 font-bold text-slate-800">{stats.total.teenSum}</Td>
                                 <Td isTotal>{stats.total.childM}</Td>
                                 <Td isTotal>{stats.total.childF}</Td>
-                                <Td className="bg-indigo-100 font-bold">{stats.total.childSum}</Td>
+                                <Td className="bg-indigo-100 font-bold text-slate-800">{stats.total.childSum}</Td>
                                 <Td isTotal>{stats.total.maleSum}</Td>
                                 <Td isTotal>{stats.total.femaleSum}</Td>
-                                <Td className="bg-green-100 text-green-800 font-black  text-lg">{stats.total.total}</Td>
+                                <Td className="bg-green-100 font-black text-lg text-slate-800">{stats.total.total}</Td>
                             </tr>
                         </tbody>
                     </table>

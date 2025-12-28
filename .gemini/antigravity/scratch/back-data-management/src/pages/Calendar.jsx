@@ -153,7 +153,7 @@ export default function Calendar() {
                         <ChevronRight size={24} />
                     </button>
                 </div>
-                <div className="grid grid-cols-7 bg-[#d5f7c9] border-b border-gray-200">
+                <div className="grid grid-cols-7 bg-[#f8edbe] border-b border-gray-200">
                     {['일', '월', '화', '수', '목', '금', '토'].map((day, i) => (
                         <div key={day} className={`text-center py-2 text-sm font-bold ${i === 0 ? 'text-red-600' : 'text-slate-800'}`}>
                             {day}

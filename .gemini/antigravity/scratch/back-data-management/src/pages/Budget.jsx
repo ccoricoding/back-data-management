@@ -156,7 +156,7 @@ export default function Budget() {
             <div className="bg-white p-4 rounded-xl shadow-md border border-gray-100">
                 <div className="overflow-x-auto">
                     <table className="min-w-full">
-                        <thead className="bg-[#d5f7c9] text-xs text-slate-800 uppercase font-bold">
+                        <thead className="bg-[#f8edbe] text-xs text-slate-800 uppercase font-bold">
                             <tr>
                                 <th className="px-3 py-2 border border-gray-200 whitespace-nowrap text-center">
                                     <div className="flex justify-center items-center gap-1">

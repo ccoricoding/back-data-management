@@ -116,21 +116,19 @@ export default function Dashboard() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <StatCard
                     title="평생교육강좌"
-                    icon={Lightbulb}
+                    icon={BookOpen}
                     stats={summaryStats.education}
-                    color="bg-[#d5f7c9]"
+                    color="bg-[#f8d1be]"
                     labels={['강좌', '횟수']}
                 />
                 <StatCard
                     title="독서문화행사"
-                    icon={BookOpen}
+                    icon={Lightbulb}
                     stats={summaryStats.event}
-                    color="bg-[#d5f7c9]"
+                    color="bg-[#d8f8be]"
                     labels={['행사', '횟수']}
                 />
             </div>
-
         </div>
     );
 }
-

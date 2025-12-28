@@ -35,11 +35,11 @@ export default function Navbar() {
     };
 
     return (
-        <nav className="bg-[#d5f7c9] text-slate-800 shadow-lg fixed top-0 left-0 right-0 z-50">
+        <nav className="bg-[#f8edbe] shadow-lg sticky top-0 z-50 transition-colors duration-300">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     <div className="flex items-center gap-4">
-                        <div className="flex items-center bg-white/20 rounded px-1.5 py-0.5">
+                        <div className="flex items-center bg-white/40 rounded px-1.5 py-0.5">
                             <select
                                 value={selectedYear}
                                 onChange={(e) => setSelectedYear(Number(e.target.value))}
