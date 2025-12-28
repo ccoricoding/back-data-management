@@ -13,12 +13,21 @@ export default function Statistics() {
     const [currentDate, setCurrentDate] = useState(new Date());
 
     const handlePrevMonth = () => {
-        setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
+        const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+        if (newDate.getFullYear() < selectedYear) return;
+        setCurrentDate(newDate);
     };
 
     const handleNextMonth = () => {
-        setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
+        const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
+        if (newDate.getFullYear() > selectedYear) return;
+        setCurrentDate(newDate);
     };
+
+    // Update currentDate if selectedYear changes
+    useEffect(() => {
+        setCurrentDate(new Date(selectedYear, 0, 1)); // Jan 1st of selected year
+    }, [selectedYear]);
 
     useEffect(() => {
         const loadData = async () => {
@@ -206,11 +215,9 @@ export default function Statistics() {
 
     if (loading) return <div className="p-8 text-center"></div>;
 
-    const Th = ({ children, className, rowSpan, colSpan }) => (
-        <th rowSpan={rowSpan} colSpan={colSpan} className={`px-4 py-3 text-xs font-bold text-gray-600 uppercase tracking-wider text-center min-w-[90px] ${className}`}>
-            {children}
-        </th>
-    );
+    <th rowSpan={rowSpan} colSpan={colSpan} className={`px-4 py-3 text-xs font-bold text-gray-600 uppercase tracking-wider text-center min-w-[90px] ${className}`}>
+        {children}
+    </th>
 
     const Td = ({ children, className, isTotal }) => (
         <td className={`px-4 py-3 text-sm text-gray-700 text-center ${isTotal ? 'bg-gray-50 font-bold' : ''} ${className}`}>
@@ -266,7 +273,7 @@ export default function Statistics() {
                         </thead>
                         <tbody>
                             <tr>
-                                <td className="px-4 py-3 text-sm text-gray-700 bg-slate-50 sticky left-0 text-center border-b border-gray-100">
+                                <td className="px-4 py-3 text-sm text-gray-700 bg-slate-50 sticky left-0 text-center border-b border-gray-100 font-bold tracking-wider">
                                     평생교육강좌
                                 </td>
                                 <Td>{stats.edu.adultM}</Td>
@@ -283,7 +290,7 @@ export default function Statistics() {
                                 <Td className="bg-green-50 text-green-700 font-bold ">{stats.edu.total}</Td>
                             </tr>
                             <tr>
-                                <td className="px-4 py-3 text-sm text-gray-700 bg-slate-50 sticky left-0 text-center border-b border-gray-100">
+                                <td className="px-4 py-3 text-sm text-gray-700 bg-slate-50 sticky left-0 text-center border-b border-gray-100 font-bold tracking-wider">
                                     독서문화행사
                                 </td>
                                 <Td>{stats.event.adultM}</Td>
@@ -300,7 +307,7 @@ export default function Statistics() {
                                 <Td className="bg-green-50 text-green-700 font-bold ">{stats.event.total}</Td>
                             </tr>
                             <tr className="bg-slate-100">
-                                <td className="px-4 py-3 text-sm text-gray-700 bg-slate-200 sticky left-0 text-center border-t border-gray-200">
+                                <td className="px-4 py-3 text-sm text-gray-700 bg-slate-200 sticky left-0 text-center border-t border-gray-200 font-bold tracking-wider">
                                     합계
                                 </td>
                                 <Td isTotal>{stats.total.adultM}</Td>

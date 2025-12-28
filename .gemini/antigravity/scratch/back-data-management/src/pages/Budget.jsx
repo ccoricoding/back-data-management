@@ -157,15 +157,15 @@ export default function Budget() {
                 <div className="overflow-x-auto">
                     <table className="min-w-full">
                         <thead>
-                            <tr className="bg-gray-50">
-                                <th className="px-3 py-2 text-xs font-bold text-slate-500 text-center border border-gray-200">구분</th>
-                                <th className="px-3 py-2 text-xs font-bold text-slate-500 text-center border border-gray-200">사업내역(대)</th>
-                                <th className="px-3 py-2 text-xs font-bold text-slate-500 text-center border border-gray-200">사업내역(중)</th>
-                                <th className="px-3 py-2 text-xs font-bold text-slate-500 text-center border border-gray-200">사업내역(소)</th>
-                                <th className="px-3 py-2 text-xs font-bold text-slate-500 text-center border border-gray-200">목-세목</th>
-                                <th className="px-3 py-2 text-xs font-bold text-slate-500 text-center border border-gray-200">배정금액</th>
-                                <th className="px-3 py-2 text-xs font-bold text-slate-500 text-center border border-gray-200">지출금액</th>
-                                <th className="px-3 py-2 text-xs font-bold text-slate-500 text-center border border-gray-200">잔액</th>
+                            <tr className="bg-gray-50 text-xs text-gray-700 uppercase">
+                                <th className="px-3 py-2 border border-gray-200 whitespace-nowrap text-center text-xs font-normal">구분</th>
+                                <th className="px-3 py-2 border border-gray-200 whitespace-nowrap text-center text-xs font-normal">사업내역(대)</th>
+                                <th className="px-3 py-2 border border-gray-200 whitespace-nowrap text-center text-xs font-normal">사업내역(중)</th>
+                                <th className="px-3 py-2 border border-gray-200 whitespace-nowrap text-center text-xs font-normal">사업내역(소)</th>
+                                <th className="px-3 py-2 border border-gray-200 whitespace-nowrap text-center text-xs font-normal">목-세목</th>
+                                <th className="px-3 py-2 border border-gray-200 whitespace-nowrap text-center text-xs font-normal">배정금액</th>
+                                <th className="px-3 py-2 border border-gray-200 whitespace-nowrap text-center text-xs font-normal">지출금액</th>
+                                <th className="px-3 py-2 border border-gray-200 whitespace-nowrap text-center text-xs font-normal">잔액</th>
                             </tr>
                         </thead>
                         <tbody>

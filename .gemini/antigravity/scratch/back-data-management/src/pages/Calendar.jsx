@@ -56,12 +56,21 @@ export default function Calendar() {
     const getFirstDayOfMonth = (year, month) => new Date(year, month, 1).getDay();
 
     const handlePrevMonth = () => {
-        setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
+        const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+        if (newDate.getFullYear() < selectedYear) return;
+        setCurrentDate(newDate);
     };
 
     const handleNextMonth = () => {
-        setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
+        const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
+        if (newDate.getFullYear() > selectedYear) return;
+        setCurrentDate(newDate);
     };
+
+    // Update currentDate if selectedYear changes
+    useEffect(() => {
+        setCurrentDate(new Date(selectedYear, 0, 1)); // Jan 1st of selected year
+    }, [selectedYear]);
 
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();

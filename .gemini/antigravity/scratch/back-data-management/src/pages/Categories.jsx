@@ -456,20 +456,35 @@ export default function Categories() {
                 ].map(({ key, className }, index) => {
                     const items = categories[key] || [];
                     const THEMES = [
-                        { h: 'bg-red-100', b: 'bg-red-50' }, { h: 'bg-orange-100', b: 'bg-orange-50' },
-                        { h: 'bg-amber-100', b: 'bg-amber-50' }, { h: 'bg-yellow-100', b: 'bg-yellow-50' },
-                        { h: 'bg-lime-100', b: 'bg-lime-50' }, { h: 'bg-green-100', b: 'bg-green-50' },
-                        { h: 'bg-emerald-100', b: 'bg-emerald-50' }, { h: 'bg-teal-100', b: 'bg-teal-50' },
-                        { h: 'bg-cyan-100', b: 'bg-cyan-50' }, { h: 'bg-sky-100', b: 'bg-sky-50' },
-                        { h: 'bg-blue-100', b: 'bg-blue-50' }, { h: 'bg-indigo-100', b: 'bg-indigo-50' },
-                        { h: 'bg-violet-100', b: 'bg-violet-50' }, { h: 'bg-purple-100', b: 'bg-purple-50' },
-                        { h: 'bg-fuchsia-100', b: 'bg-fuchsia-50' }, { h: 'bg-pink-100', b: 'bg-pink-50' },
-                        { h: 'bg-rose-100', b: 'bg-rose-50' }
+                        { h: 'bg-gray-50', b: 'bg-gray-50' }, // All gray headers like Status
+                        { h: 'bg-gray-50', b: 'bg-gray-50' },
+                        { h: 'bg-gray-50', b: 'bg-gray-50' },
+                        { h: 'bg-gray-50', b: 'bg-gray-50' },
+                        { h: 'bg-gray-50', b: 'bg-gray-50' },
+                        { h: 'bg-gray-50', b: 'bg-gray-50' },
                     ];
+                    // Keep original theme logic for item body background if needed, but request said "background color... like Status header gray"
+                    // Status header is bg-gray-50.
+                    // The request: "Change the background color of 'Division', 'Weekday/Weekend', ... headers to gray like Status menu header cell."
+                    // This implies the {theme.h} part should be bg-gray-50. What about {theme.b}?
+                    // The user only said "headers". I will assume item backgrounds ({theme.b}) can remain colored or should they also be gray?
+                    // "카테고리의 구분... 예산을 배경색을 현황 메뉴의 헤더 셀 배경과 같은 회색으로 해줘" -> likely the header part of the card.
+                    // BUT "Categories" page has coloured cards.
+                    // Let's interpret "header" as the card header.
+                    // Actually, if I change card header to gray, the whole card loses its color identity.
+                    // But the user specifically listed 'Category', 'Weekday/Weekend' etc which are the CARD TITLES via key.
+                    // So I will change the `.h` part to `bg-gray-50`.
+                    // I'll keep `.b` colored for visual distinction of items, OR strict interpretation: user wants the specific elements mentioned (which are the headers of these sections) to be gray.
+                    // Let's force theme.h to be 'bg-gray-50'.
+
+                    // Wait, the code loops through themes.
+                    // I will override the theme usage for the HEADER div.
+
                     const theme = THEMES[index % THEMES.length];
+                    const headerClass = 'bg-gray-50'; // Fixed gray header
                     return (
                         <div key={key} className={`bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col h-full hover:shadow-md transition-shadow ${className || ''}`}>
-                            <div className={`${theme.h} p-4 border-b border-gray-100 flex justify-between items-center`}>
+                            <div className={`${headerClass} p-4 border-b border-gray-200 flex justify-between items-center`}>
                                 <h3 className="font-semibold text-slate-700">{key}</h3>
                                 <button
                                     onClick={() => handleAddItem(key)}
@@ -481,8 +496,8 @@ export default function Categories() {
                             </div>
                             <div className="p-4 flex-1 overflow-y-auto max-h-[400px] min-h-[200px]">
                                 {items.length === 0 ? (
-                                    <div className="text-gray-400 text-sm text-center py-8 italic">
-                                        등록된 항목이 없습니다
+                                    <div className="text-gray-400 text-sm text-center py-8 italic hidden">
+                                        {/* Empty state hidden as requested */}
                                     </div>
                                 ) : (
                                     <>
