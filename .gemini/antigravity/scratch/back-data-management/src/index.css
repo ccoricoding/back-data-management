@@ -8,5 +8,7 @@
   }
   body {
     @apply bg-slate-50 text-slate-800 antialiased;
+    min-width: 1280px; /* Force desktop view on mobile */
+    overflow-x: auto;
   }
 }

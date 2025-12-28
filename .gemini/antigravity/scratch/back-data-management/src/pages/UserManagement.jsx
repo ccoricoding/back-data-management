@@ -330,7 +330,7 @@ export default function UserManagement() {
             const link = document.createElement('a');
             link.href = url;
             const today = new Date().toISOString().slice(0, 10);
-            link.download = `백데이터_백업_${today}.json`;
+            link.download = `백업_${today}.json`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -391,145 +391,155 @@ export default function UserManagement() {
                 />
                 <button
                     onClick={handleRestoreClick}
-                    className="flex items-center gap-2 bg-red-600 text-white px-6 py-2.5 rounded-lg hover:bg-red-700 transition-all font-medium shadow-md hover:shadow-lg"
+                    className="flex items-center gap-2 bg-primary-600 text-white px-6 py-2.5 rounded-lg hover:bg-primary-700 transition-all font-medium disabled:opacity-50 shadow-md hover:shadow-lg"
                 >
                     <Upload size={18} />
                     백업 복구
                 </button>
                 <button
                     onClick={handleDownloadBackup}
-                    className="flex items-center gap-2 bg-indigo-600 text-white px-6 py-2.5 rounded-lg hover:bg-indigo-700 transition-all font-medium shadow-md hover:shadow-lg"
+                    className="flex items-center gap-2 bg-primary-600 text-white px-6 py-2.5 rounded-lg hover:bg-primary-700 transition-all font-medium disabled:opacity-50 shadow-md hover:shadow-lg"
                 >
                     <Download size={18} />
                     백업 저장
                 </button>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden relative">
-                <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
-                        <tr>
-                            {COLUMNS.map(col => (
-                                <th key={col.key} className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${col.key === 'manage' ? 'w-[140px]' : ''}`}>
-                                    <div className="flex items-center gap-1">
-                                        <span>{col.label}</span>
-                                        {!col.noFilter && !col.noSort && (
-                                            <button
-                                                onClick={(e) => toggleFilterPopup(col.key, e)}
-                                                className={`p-0.5 rounded hover:bg-gray-200 ${activeFilterCol === col.key ? 'text-indigo-600 bg-indigo-50' : 'text-gray-400'}`}
-                                            >
-                                                <ChevronDown size={14} />
-                                            </button>
-                                        )}
-                                    </div>
-                                </th>
-                            ))}
-                        </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                        {processedUsers.map((u) => {
-                            const isEditing = editingUserId === u.id;
-                            return (
-                                <tr key={u.id} className="hover:bg-slate-50 transition-colors">
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {isEditing ? (
-                                            <select
-                                                className="block w-full px-2 py-1 text-xs border border-gray-300 rounded"
-                                                value={editForm.libraryName}
-                                                onChange={(e) => setEditForm({ ...editForm, libraryName: e.target.value })}
-                                            >
-                                                <option value="">선택</option>
-                                                {LIBRARY_LIST.map(lib => <option key={lib} value={lib}>{lib}</option>)}
-                                            </select>
-                                        ) : (u.libraryName || '-')}
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        {isEditing ? (
-                                            <input
-                                                type="text"
-                                                className="block w-full px-2 py-1 text-xs border border-gray-300 rounded"
-                                                value={editForm.name}
-                                                onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-                                            />
-                                        ) : u.name}
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {isEditing ? (
-                                            <input
-                                                type="text"
-                                                autoComplete="new-password"
-                                                className="block w-full px-2 py-1 text-xs border border-gray-300 rounded"
-                                                value={editForm.password}
-                                                onChange={(e) => setEditForm({ ...editForm, password: e.target.value })}
-                                            />
-                                        ) : '****'}
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        {u.isAdmin ? (
-                                            <span></span>
-                                        ) : u.isApproved ? (
-                                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">승인됨</span>
-                                        ) : (
-                                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">대기중</span>
-                                        )}
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        {u.isAdmin ? (
-                                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">대표</span>
-                                        ) : isEditing ? (
-                                            <select
-                                                className="block w-full px-2 py-1 text-xs border border-gray-300 rounded"
-                                                value={editForm.role}
-                                                onChange={(e) => setEditForm({ ...editForm, role: e.target.value })}
-                                            >
-                                                <option value="general">일반</option>
-                                                <option value="special">특별</option>
-                                            </select>
-                                        ) : (
-                                            <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${u.role === 'special' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'}`}>
-                                                {u.role === 'special' ? '특별' : '일반'}
-                                            </span>
-                                        )}
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {u.created_at ? new Date(u.created_at).toLocaleString('ko-KR', {
-                                            year: 'numeric', month: '2-digit', day: '2-digit',
-                                            hour: '2-digit', minute: '2-digit', hour12: false
-                                        }) : '-'}
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <div className="flex items-center justify-end gap-2">
-                                            {isEditing ? (
-                                                <>
-                                                    <button onClick={() => saveEdit(u.id)} className="text-green-600 hover:text-green-900"><Save size={16} /></button>
-                                                    <button onClick={cancelEdit} className="text-gray-500 hover:text-gray-700"><X size={16} /></button>
-                                                </>
-                                            ) : (
-                                                <>
-                                                    {!u.isAdmin && (
+            <div className="bg-white p-0 rounded-xl shadow-md border border-gray-100 overflow-hidden">
+                <div className="bg-primary-500 p-2 border-b border-primary-600 flex justify-between items-center">
+                    <h2 className="text-sm font-bold text-white pl-3">회원관리</h2>
+                </div>
+                <div className="p-6">
+                    <div className="overflow-x-auto rounded-lg">
+                        <table className="min-w-full divide-y divide-gray-200">
+                            <thead className="bg-primary-50 text-slate-700">
+                                <tr>
+                                    {COLUMNS.map(col => (
+                                        <th
+                                            key={col.key}
+                                            className={`px-6 py-2 text-left text-xs font-bold uppercase tracking-wider ${col.key === 'manage' ? 'w-[140px]' : 'cursor-pointer hover:bg-white/50 text-slate-600'}`}
+                                            onClick={(e) => {
+                                                if (!col.noFilter && !col.noSort) {
+                                                    toggleFilterPopup(col.key, e);
+                                                }
+                                            }}
+                                        >
+                                            <div className="flex items-center gap-1">
+                                                <span>{col.label}</span>
+                                                {activeFilterCol === col.key && (
+                                                    <span className="hidden">Filter</span>
+                                                )}
+                                            </div>
+                                        </th>
+                                    ))}
+                                </tr>
+                            </thead>
+                            <tbody className="bg-white divide-y divide-gray-200">
+                                {processedUsers.map((u) => {
+                                    const isEditing = editingUserId === u.id;
+                                    return (
+                                        <tr key={u.id} className="hover:bg-slate-50 transition-colors">
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {isEditing ? (
+                                                    <select
+                                                        className="block w-full px-2 py-1 text-xs border border-gray-300 rounded"
+                                                        value={editForm.libraryName}
+                                                        onChange={(e) => setEditForm({ ...editForm, libraryName: e.target.value })}
+                                                    >
+                                                        <option value="">선택</option>
+                                                        {LIBRARY_LIST.map(lib => <option key={lib} value={lib}>{lib}</option>)}
+                                                    </select>
+                                                ) : (u.libraryName || '-')}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                {isEditing ? (
+                                                    <input
+                                                        type="text"
+                                                        className="block w-full px-2 py-1 text-xs border border-gray-300 rounded"
+                                                        value={editForm.name}
+                                                        onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                                                    />
+                                                ) : u.name}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {isEditing ? (
+                                                    <input
+                                                        type="text"
+                                                        autoComplete="new-password"
+                                                        className="block w-full px-2 py-1 text-xs border border-gray-300 rounded"
+                                                        value={editForm.password}
+                                                        onChange={(e) => setEditForm({ ...editForm, password: e.target.value })}
+                                                    />
+                                                ) : '****'}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                {u.isAdmin ? (
+                                                    <span></span>
+                                                ) : u.isApproved ? (
+                                                    <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">승인됨</span>
+                                                ) : (
+                                                    <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">대기중</span>
+                                                )}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                {u.isAdmin ? (
+                                                    <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">대표</span>
+                                                ) : isEditing ? (
+                                                    <select
+                                                        className="block w-full px-2 py-1 text-xs border border-gray-300 rounded"
+                                                        value={editForm.role}
+                                                        onChange={(e) => setEditForm({ ...editForm, role: e.target.value })}
+                                                    >
+                                                        <option value="general">일반</option>
+                                                        <option value="special">특별</option>
+                                                    </select>
+                                                ) : (
+                                                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${u.role === 'special' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'}`}>
+                                                        {u.role === 'special' ? '특별' : '일반'}
+                                                    </span>
+                                                )}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {u.created_at ? new Date(u.created_at).toLocaleString('ko-KR', {
+                                                    year: 'numeric', month: '2-digit', day: '2-digit',
+                                                    hour: '2-digit', minute: '2-digit', hour12: false
+                                                }) : '-'}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                <div className="flex items-center justify-end gap-2">
+                                                    {isEditing ? (
                                                         <>
-                                                            {!u.isApproved ? (
-                                                                <button onClick={() => handleToggleStatus(u.id, true)} className="text-white bg-indigo-500 hover:bg-indigo-600 px-2 py-1 rounded text-xs">승인</button>
-                                                            ) : (
-                                                                <button onClick={() => handleToggleStatus(u.id, false)} className="text-white bg-amber-500 hover:bg-amber-600 px-2 py-1 rounded text-xs">취소</button>
+                                                            <button onClick={() => saveEdit(u.id)} className="text-green-600 hover:text-green-900"><Save size={16} /></button>
+                                                            <button onClick={cancelEdit} className="text-gray-500 hover:text-gray-700"><X size={16} /></button>
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            {!u.isAdmin && (
+                                                                <>
+                                                                    {!u.isApproved ? (
+                                                                        <button onClick={() => handleToggleStatus(u.id, true)} className="text-white bg-indigo-500 hover:bg-indigo-600 px-2 py-1 rounded text-xs">승인</button>
+                                                                    ) : (
+                                                                        <button onClick={() => handleToggleStatus(u.id, false)} className="text-white bg-amber-500 hover:bg-amber-600 px-2 py-1 rounded text-xs">취소</button>
+                                                                    )}
+                                                                </>
+                                                            )}
+                                                            {!u.isAdmin && (
+                                                                <>
+                                                                    <button onClick={() => startEdit(u)} className="text-slate-500 hover:text-slate-700"><Edit2 size={16} /></button>
+                                                                    <button onClick={() => handleDeleteClick(u.id)} className="text-red-500 hover:text-red-700"><Trash2 size={16} /></button>
+                                                                </>
                                                             )}
                                                         </>
                                                     )}
-                                                    {!u.isAdmin && (
-                                                        <>
-                                                            <button onClick={() => startEdit(u)} className="text-slate-500 hover:text-slate-700"><Edit2 size={16} /></button>
-                                                            <button onClick={() => handleDeleteClick(u.id)} className="text-red-500 hover:text-red-700"><Trash2 size={16} /></button>
-                                                        </>
-                                                    )}
-                                                </>
-                                            )}
-                                        </div>
-                                    </td>
-                                </tr>
-                            );
-                        })}
-                    </tbody>
-                </table>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
 
             {/* Filter Popup with Sorting */}

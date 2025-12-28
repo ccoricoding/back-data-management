@@ -104,28 +104,48 @@ export default function Budget() {
     const handleDownloadExcel = () => {
         const now = new Date();
         const dateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-        const fileName = `예산현황_${dateStr}.xlsx`;
+        const fileName = `${user?.libraryName || '도서관'}_${selectedYear}_예산_${dateStr}.xlsx`;
+
+        const noBorderStyle = { border: { top: { style: 'thin', color: { rgb: "E5E7EB" } }, bottom: { style: 'thin', color: { rgb: "E5E7EB" } }, left: { style: 'thin', color: { rgb: "E5E7EB" } }, right: { style: 'thin', color: { rgb: "E5E7EB" } } } };
+
+        const headerStyle = {
+            font: { bold: true, color: { rgb: "334155" } }, // slate-700
+            fill: { fgColor: { rgb: "EEF2FF" } }, // primary-50
+            alignment: { horizontal: "center", vertical: "center" },
+            border: noBorderStyle.border
+        };
+
+        const cellStyleCenter = {
+            alignment: { horizontal: "center", vertical: "center" },
+            border: noBorderStyle.border
+        };
+
+        const cellStyleRight = {
+            alignment: { horizontal: "right", vertical: "center" },
+            border: noBorderStyle.border,
+            numFmt: '#,##0'
+        };
 
         const headerRow = [
-            { v: '구분', t: 's', s: { font: { bold: true }, fill: { fgColor: { rgb: "87CEEB" } }, alignment: { horizontal: "center" }, border: { top: { style: 'thin' }, bottom: { style: 'thin' }, left: { style: 'thin' }, right: { style: 'thin' } } } },
-            { v: '사업내역(대)', t: 's', s: { font: { bold: true }, fill: { fgColor: { rgb: "87CEEB" } }, alignment: { horizontal: "center" }, border: { top: { style: 'thin' }, bottom: { style: 'thin' }, left: { style: 'thin' }, right: { style: 'thin' } } } },
-            { v: '사업내역(중)', t: 's', s: { font: { bold: true }, fill: { fgColor: { rgb: "87CEEB" } }, alignment: { horizontal: "center" }, border: { top: { style: 'thin' }, bottom: { style: 'thin' }, left: { style: 'thin' }, right: { style: 'thin' } } } },
-            { v: '사업내역(소)', t: 's', s: { font: { bold: true }, fill: { fgColor: { rgb: "87CEEB" } }, alignment: { horizontal: "center" }, border: { top: { style: 'thin' }, bottom: { style: 'thin' }, left: { style: 'thin' }, right: { style: 'thin' } } } },
-            { v: '목-세목', t: 's', s: { font: { bold: true }, fill: { fgColor: { rgb: "87CEEB" } }, alignment: { horizontal: "center" }, border: { top: { style: 'thin' }, bottom: { style: 'thin' }, left: { style: 'thin' }, right: { style: 'thin' } } } },
-            { v: '배정금액', t: 's', s: { font: { bold: true }, fill: { fgColor: { rgb: "87CEEB" } }, alignment: { horizontal: "center" }, border: { top: { style: 'thin' }, bottom: { style: 'thin' }, left: { style: 'thin' }, right: { style: 'thin' } } } },
-            { v: '지출금액', t: 's', s: { font: { bold: true }, fill: { fgColor: { rgb: "87CEEB" } }, alignment: { horizontal: "center" }, border: { top: { style: 'thin' }, bottom: { style: 'thin' }, left: { style: 'thin' }, right: { style: 'thin' } } } },
-            { v: '잔액', t: 's', s: { font: { bold: true }, fill: { fgColor: { rgb: "87CEEB" } }, alignment: { horizontal: "center" }, border: { top: { style: 'thin' }, bottom: { style: 'thin' }, left: { style: 'thin' }, right: { style: 'thin' } } } }
+            { v: '구분', t: 's', s: headerStyle },
+            { v: '사업내역(대)', t: 's', s: headerStyle },
+            { v: '사업내역(중)', t: 's', s: headerStyle },
+            { v: '사업내역(소)', t: 's', s: headerStyle },
+            { v: '목-세목', t: 's', s: headerStyle },
+            { v: '배정금액', t: 's', s: headerStyle },
+            { v: '지출금액', t: 's', s: headerStyle },
+            { v: '잔액', t: 's', s: headerStyle }
         ];
 
         const dataRows = budgetData.map(item => [
-            { v: item.v1, t: 's', s: { alignment: { horizontal: "center" }, border: { top: { style: 'thin' }, bottom: { style: 'thin' }, left: { style: 'thin' }, right: { style: 'thin' } } } },
-            { v: item.v2, t: 's', s: { alignment: { horizontal: "center" }, border: { top: { style: 'thin' }, bottom: { style: 'thin' }, left: { style: 'thin' }, right: { style: 'thin' } } } },
-            { v: item.v3, t: 's', s: { alignment: { horizontal: "center" }, border: { top: { style: 'thin' }, bottom: { style: 'thin' }, left: { style: 'thin' }, right: { style: 'thin' } } } },
-            { v: item.v4, t: 's', s: { alignment: { horizontal: "center" }, border: { top: { style: 'thin' }, bottom: { style: 'thin' }, left: { style: 'thin' }, right: { style: 'thin' } } } },
-            { v: item.v5, t: 's', s: { alignment: { horizontal: "center" }, border: { top: { style: 'thin' }, bottom: { style: 'thin' }, left: { style: 'thin' }, right: { style: 'thin' } } } },
-            { v: item.allocated, t: 'n', s: { alignment: { horizontal: "right" }, border: { top: { style: 'thin' }, bottom: { style: 'thin' }, left: { style: 'thin' }, right: { style: 'thin' } }, numFmt: '#,##0' } },
-            { v: item.spent, t: 'n', s: { alignment: { horizontal: "right" }, border: { top: { style: 'thin' }, bottom: { style: 'thin' }, left: { style: 'thin' }, right: { style: 'thin' } }, numFmt: '#,##0' } },
-            { v: item.allocated - item.spent, t: 'n', s: { alignment: { horizontal: "right" }, border: { top: { style: 'thin' }, bottom: { style: 'thin' }, left: { style: 'thin' }, right: { style: 'thin' } }, numFmt: '#,##0' } }
+            { v: item.v1, t: 's', s: cellStyleCenter },
+            { v: item.v2, t: 's', s: cellStyleCenter },
+            { v: item.v3, t: 's', s: cellStyleCenter },
+            { v: item.v4, t: 's', s: cellStyleCenter },
+            { v: item.v5, t: 's', s: cellStyleCenter },
+            { v: item.allocated, t: 'n', s: cellStyleRight },
+            { v: item.spent, t: 'n', s: cellStyleRight },
+            { v: item.allocated - item.spent, t: 'n', s: cellStyleRight }
         ]);
 
         const wsData = [headerRow, ...dataRows];
@@ -134,6 +154,14 @@ export default function Budget() {
             { wch: 15 }, { wch: 20 }, { wch: 20 }, { wch: 20 }, { wch: 15 }, { wch: 15 }, { wch: 15 }, { wch: 15 }
         ];
         ws['!cols'] = wscols;
+
+        // Row Heights
+        const rowHeights = [];
+        rowHeights[0] = { hpt: 30 }; // Header
+        for (let i = 1; i <= dataRows.length + 1; i++) {
+            rowHeights[i] = { hpt: 22 }; // Data Rows
+        }
+        ws['!rows'] = rowHeights;
 
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "예산");
@@ -145,7 +173,7 @@ export default function Budget() {
             <div className="flex justify-end items-center mb-4">
                 <button
                     onClick={handleDownloadExcel}
-                    className="flex items-center gap-2 bg-green-600 text-white px-6 py-2.5 rounded-lg hover:bg-green-700 transition-all font-medium shadow-md hover:shadow-lg"
+                    className="flex items-center gap-2 bg-primary-600 text-white px-6 py-2.5 rounded-lg hover:bg-primary-700 transition-all font-medium shadow-md hover:shadow-lg"
                 >
                     <Download size={18} />
                     엑셀 저장
@@ -153,46 +181,51 @@ export default function Budget() {
             </div>
 
 
-            <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100">
-                <div className="overflow-x-auto">
-                    <table className="min-w-full">
-                        <thead>
-                            <tr className="bg-gray-50">
-                                <th className="px-3 py-2 text-xs font-bold text-slate-500 text-center border border-gray-200">구분</th>
-                                <th className="px-3 py-2 text-xs font-bold text-slate-500 text-center border border-gray-200">사업내역(대)</th>
-                                <th className="px-3 py-2 text-xs font-bold text-slate-500 text-center border border-gray-200">사업내역(중)</th>
-                                <th className="px-3 py-2 text-xs font-bold text-slate-500 text-center border border-gray-200">사업내역(소)</th>
-                                <th className="px-3 py-2 text-xs font-bold text-slate-500 text-center border border-gray-200">목-세목</th>
-                                <th className="px-3 py-2 text-xs font-bold text-slate-500 text-center border border-gray-200">배정금액</th>
-                                <th className="px-3 py-2 text-xs font-bold text-slate-500 text-center border border-gray-200">지출금액</th>
-                                <th className="px-3 py-2 text-xs font-bold text-slate-500 text-center border border-gray-200">잔액</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {budgetData.map((item, index) => {
-                                const balance = item.allocated - item.spent;
-                                return (
-                                    <tr key={index} className="hover:bg-slate-50">
-                                        <td className="px-3 py-2 text-sm text-center border border-gray-200">{item.v1}</td>
-                                        <td className="px-3 py-2 text-sm text-center border border-gray-200">{item.v2}</td>
-                                        <td className="px-3 py-2 text-sm text-center border border-gray-200">{item.v3}</td>
-                                        <td className="px-3 py-2 text-sm text-center border border-gray-200">{item.v4}</td>
-                                        <td className="px-3 py-2 text-sm text-center border border-gray-200">{item.v5}</td>
-                                        <td className="px-3 py-2 text-sm text-right border border-gray-200">{item.allocated.toLocaleString()}</td>
-                                        <td
-                                            className={`px-3 py-2 text-sm text-right border border-gray-200 ${item.spent > 0 ? 'cursor-pointer hover:bg-emerald-50 hover:text-emerald-600 transition-colors font-semibold underline' : ''}`}
-                                            onClick={() => handleSpentClick(item)}
-                                        >
-                                            {item.spent.toLocaleString()}
-                                        </td>
-                                        <td className="px-3 py-2 text-sm text-right border border-gray-200">
-                                            {balance.toLocaleString()}
-                                        </td>
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
+            <div className="bg-white p-0 rounded-xl shadow-md border border-gray-100 overflow-hidden">
+                <div className="bg-primary-500 p-2 border-b border-primary-600 flex justify-between items-center">
+                    <h2 className="text-sm font-bold text-white pl-3">예산</h2>
+                </div>
+                <div className="p-6">
+                    <div className="overflow-x-auto rounded-lg">
+                        <table className="min-w-full">
+                            <thead>
+                                <tr className="bg-primary-50 text-slate-700">
+                                    <th className="px-3 py-2 text-xs font-bold text-slate-600 text-center border border-gray-200">구분</th>
+                                    <th className="px-3 py-2 text-xs font-bold text-slate-600 text-center border border-gray-200">사업내역(대)</th>
+                                    <th className="px-3 py-2 text-xs font-bold text-slate-600 text-center border border-gray-200">사업내역(중)</th>
+                                    <th className="px-3 py-2 text-xs font-bold text-slate-600 text-center border border-gray-200">사업내역(소)</th>
+                                    <th className="px-3 py-2 text-xs font-bold text-slate-600 text-center border border-gray-200">목-세목</th>
+                                    <th className="px-3 py-2 text-xs font-bold text-slate-600 text-center border border-gray-200">배정금액</th>
+                                    <th className="px-3 py-2 text-xs font-bold text-slate-600 text-center border border-gray-200">지출금액</th>
+                                    <th className="px-3 py-2 text-xs font-bold text-slate-600 text-center border border-gray-200">잔액</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {budgetData.map((item, index) => {
+                                    const balance = item.allocated - item.spent;
+                                    return (
+                                        <tr key={index} className="hover:bg-slate-50">
+                                            <td className="px-3 py-2 text-sm text-center border border-gray-200">{item.v1}</td>
+                                            <td className="px-3 py-2 text-sm text-center border border-gray-200">{item.v2}</td>
+                                            <td className="px-3 py-2 text-sm text-center border border-gray-200">{item.v3}</td>
+                                            <td className="px-3 py-2 text-sm text-center border border-gray-200">{item.v4}</td>
+                                            <td className="px-3 py-2 text-sm text-center border border-gray-200">{item.v5}</td>
+                                            <td className="px-3 py-2 text-sm text-right border border-gray-200">{item.allocated.toLocaleString()}</td>
+                                            <td
+                                                className={`px-3 py-2 text-sm text-right border border-gray-200 ${item.spent > 0 ? 'cursor-pointer hover:bg-primary-50 hover:text-primary-600 transition-colors font-semibold underline' : ''}`}
+                                                onClick={() => handleSpentClick(item)}
+                                            >
+                                                {item.spent.toLocaleString()}
+                                            </td>
+                                            <td className="px-3 py-2 text-sm text-right border border-gray-200">
+                                                {balance.toLocaleString()}
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -214,12 +247,12 @@ export default function Budget() {
                             </button>
                         </div>
 
-                        <div className="overflow-y-auto flex-1 border rounded-lg">
+                        <div className="overflow-y-auto flex-1 border rounded-lg max-h-[60vh]">
                             <table className="min-w-full table-fixed">
-                                <thead className="bg-gray-50 sticky top-0 z-10">
+                                <thead className="bg-primary-50 sticky top-0 z-10">
                                     <tr>
                                         <th
-                                            className="px-6 py-4 text-sm font-bold text-slate-600 text-center border-b cursor-pointer hover:bg-gray-100"
+                                            className="px-3 py-2 text-xs font-bold text-slate-600 text-center border-b cursor-pointer hover:bg-white/50"
                                             onClick={() => togglePopupSort('title')}
                                         >
                                             <div className="flex items-center justify-center gap-2">
@@ -230,7 +263,7 @@ export default function Budget() {
                                             </div>
                                         </th>
                                         <th
-                                            className="px-6 py-4 text-sm font-bold text-slate-600 text-center border-b cursor-pointer hover:bg-gray-100 w-48"
+                                            className="px-3 py-2 text-xs font-bold text-slate-600 text-center border-b cursor-pointer hover:bg-white/50 w-48"
                                             onClick={() => togglePopupSort('amount')}
                                         >
                                             <div className="flex items-center justify-center gap-2">
@@ -245,15 +278,15 @@ export default function Budget() {
                                 <tbody className="divide-y divide-gray-100">
                                     {sortedPopupItems.map((detail, idx) => (
                                         <tr key={idx} className="hover:bg-slate-50 transition-colors">
-                                            <td className="px-6 py-4 text-sm text-slate-700 text-center">{detail.title}</td>
-                                            <td className="px-6 py-4 text-sm text-slate-700 text-right font-medium">{detail.amount.toLocaleString()}</td>
+                                            <td className="px-3 py-2 text-sm text-slate-700 text-center">{detail.title}</td>
+                                            <td className="px-3 py-2 text-sm text-slate-700 text-right font-medium">{detail.amount.toLocaleString()}</td>
                                         </tr>
                                     ))}
                                 </tbody>
-                                <tfoot className="bg-indigo-50 font-bold sticky bottom-0">
+                                <tfoot className="bg-primary-50 font-bold sticky bottom-0">
                                     <tr>
-                                        <td className="px-6 py-4 text-sm text-indigo-900 text-center border-t">합계</td>
-                                        <td className="px-6 py-4 text-sm text-indigo-900 text-right border-t">
+                                        <td className="px-3 py-2 text-sm text-primary-900 text-center border-t">합계</td>
+                                        <td className="px-3 py-2 text-sm text-primary-900 text-right border-t">
                                             {detailPopup.items.reduce((sum, item) => sum + item.amount, 0).toLocaleString()}
                                         </td>
                                     </tr>

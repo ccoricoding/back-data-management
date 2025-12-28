@@ -135,17 +135,17 @@ export default function Login() {
 
                     <button
                         type="submit"
-                        className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                        className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50"
                         disabled={!!success}
                     >
-                        {isLogin ? '로그인하기' : '가입하기'}
+                        {isLogin ? '로그인' : '가입'}
                     </button>
                 </form>
 
                 <div className="mt-6 text-center">
                     <button
                         onClick={switchMode}
-                        className="text-sm text-indigo-600 hover:text-indigo-500"
+                        className="text-sm text-primary-600 hover:text-primary-500"
                     >
                         {isLogin ? '계정이 없으신가요? 회원가입' : '이미 계정이 있으신가요? 로그인'}
                     </button>

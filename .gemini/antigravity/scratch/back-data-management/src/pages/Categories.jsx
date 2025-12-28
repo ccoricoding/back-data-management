@@ -349,7 +349,7 @@ export default function Categories() {
                                     value: { ...val, [field]: newValue }
                                 });
                             }}
-                            className={`flex-1 min-w-0 px-2 py-1 text-sm border border-indigo-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 ${inputBgClass} ${i === 5 ? 'text-right' : 'text-center'}`}
+                            className={`flex-1 min-w-0 px-2 py-0.5 text-xs h-6 border border-indigo-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 ${inputBgClass} ${i === 5 ? 'text-right' : 'text-center'}`}
                             autoFocus={i === 0}
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter') handleSaveItem();
@@ -372,7 +372,7 @@ export default function Categories() {
                     type="text"
                     value={val}
                     onChange={(e) => setEditingState({ ...editingState, value: e.target.value })}
-                    className={`flex-1 px-2 py-1 text-sm border border-indigo-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 ${inputBgClass}`}
+                    className={`flex-1 px-2 py-0.5 text-xs h-6 border border-indigo-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 ${inputBgClass}`}
                     autoFocus
                     onKeyDown={(e) => {
                         if (e.key === 'Enter') handleSaveItem();
@@ -394,12 +394,12 @@ export default function Categories() {
             if (hasV4) {
                 return (
                     <div className="flex gap-2 w-full">
-                        <span className={`flex-1 ${theme.b} px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v1}</span>
-                        <span className={`flex-1 ${theme.b} px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v2}</span>
-                        <span className={`flex-1 ${theme.b} px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v3}</span>
-                        <span className={`flex-1 ${theme.b} px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v4}</span>
-                        <span className={`flex-1 ${theme.b} px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v5}</span>
-                        <span className={`flex-1 ${theme.b} px-2 py-1 rounded text-sm text-slate-800 truncate text-right`}>
+                        <span className={`flex-1 ${theme.b} px-2 py-0.5 rounded text-xs text-slate-800 truncate text-center h-6 flex items-center justify-center`}>{item.v1}</span>
+                        <span className={`flex-1 ${theme.b} px-2 py-0.5 rounded text-xs text-slate-800 truncate text-center h-6 flex items-center justify-center`}>{item.v2}</span>
+                        <span className={`flex-1 ${theme.b} px-2 py-0.5 rounded text-xs text-slate-800 truncate text-center h-6 flex items-center justify-center`}>{item.v3}</span>
+                        <span className={`flex-1 ${theme.b} px-2 py-0.5 rounded text-xs text-slate-800 truncate text-center h-6 flex items-center justify-center`}>{item.v4}</span>
+                        <span className={`flex-1 ${theme.b} px-2 py-0.5 rounded text-xs text-slate-800 truncate text-center h-6 flex items-center justify-center`}>{item.v5}</span>
+                        <span className={`flex-1 ${theme.b} px-2 py-0.5 rounded text-xs text-slate-800 truncate text-right h-6 flex items-center justify-end`}>
                             {item.v6 ? (isNaN(item.v6.toString().replace(/,/g, '')) ? item.v6 : Number(item.v6.toString().replace(/,/g, '')).toLocaleString()) : ''}
                         </span>
                     </div>
@@ -407,14 +407,14 @@ export default function Categories() {
             }
             return (
                 <div className="flex gap-2 w-full">
-                    <span className={`flex-1 ${theme.b} px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v1}</span>
-                    <span className={`flex-1 ${theme.b} px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v2}</span>
-                    <span className={`flex-1 ${theme.b} px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v3}</span>
+                    <span className={`flex-1 ${theme.b} px-2 py-0.5 rounded text-xs text-slate-800 truncate text-center h-6 flex items-center justify-center`}>{item.v1}</span>
+                    <span className={`flex-1 ${theme.b} px-2 py-0.5 rounded text-xs text-slate-800 truncate text-center h-6 flex items-center justify-center`}>{item.v2}</span>
+                    <span className={`flex-1 ${theme.b} px-2 py-0.5 rounded text-xs text-slate-800 truncate text-center h-6 flex items-center justify-center`}>{item.v3}</span>
                 </div>
             );
         }
         return (
-            <div className={`w-full ${theme.b} px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>
+            <div className={`w-full ${theme.b} px-2 py-0.5 rounded text-xs text-slate-800 truncate text-center h-6 flex items-center justify-center`}>
                 {item}
             </div>
         );
@@ -430,7 +430,7 @@ export default function Categories() {
                         </span>
                     )}
                     {success && (
-                        <span className="inline-block bg-green-50 text-green-600 px-4 py-2 rounded-lg text-sm font-bold border border-green-100 animate-fade-in">
+                        <span className="inline-block bg-green-50 text-green-600 px-4 py-2 rounded-lg text-sm border border-green-100 animate-fade-in">
                             {success}
                         </span>
                     )}
@@ -438,7 +438,7 @@ export default function Categories() {
                 <button
                     onClick={handleSaveAll}
                     disabled={isSaving}
-                    className="flex items-center gap-2 bg-indigo-600 text-white px-6 py-2.5 rounded-lg hover:bg-indigo-700 transition-all font-medium disabled:opacity-50 shadow-md hover:shadow-lg"
+                    className="flex items-center gap-2 bg-primary-600 text-white px-6 py-2.5 rounded-lg hover:bg-primary-700 transition-all font-medium disabled:opacity-50 shadow-md hover:shadow-lg"
                 >
                     <Save size={18} />
                     {isSaving ? '저장 중...' : '작업 저장'}
@@ -455,33 +455,23 @@ export default function Categories() {
                     { key: '예산', title: '예산', className: 'lg:col-span-2' }
                 ].map(({ key, className }, index) => {
                     const items = categories[key] || [];
-                    const THEMES = [
-                        { h: 'bg-red-100', b: 'bg-red-50' }, { h: 'bg-orange-100', b: 'bg-orange-50' },
-                        { h: 'bg-amber-100', b: 'bg-amber-50' }, { h: 'bg-yellow-100', b: 'bg-yellow-50' },
-                        { h: 'bg-lime-100', b: 'bg-lime-50' }, { h: 'bg-green-100', b: 'bg-green-50' },
-                        { h: 'bg-emerald-100', b: 'bg-emerald-50' }, { h: 'bg-teal-100', b: 'bg-teal-50' },
-                        { h: 'bg-cyan-100', b: 'bg-cyan-50' }, { h: 'bg-sky-100', b: 'bg-sky-50' },
-                        { h: 'bg-blue-100', b: 'bg-blue-50' }, { h: 'bg-indigo-100', b: 'bg-indigo-50' },
-                        { h: 'bg-violet-100', b: 'bg-violet-50' }, { h: 'bg-purple-100', b: 'bg-purple-50' },
-                        { h: 'bg-fuchsia-100', b: 'bg-fuchsia-50' }, { h: 'bg-pink-100', b: 'bg-pink-50' },
-                        { h: 'bg-rose-100', b: 'bg-rose-50' }
-                    ];
-                    const theme = THEMES[index % THEMES.length];
+                    // Using primary color for all headers as requested
+                    const theme = { h: 'bg-primary-500', b: 'bg-indigo-50/50' };
                     return (
                         <div key={key} className={`bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col h-full hover:shadow-md transition-shadow ${className || ''}`}>
-                            <div className={`${theme.h} p-4 border-b border-gray-100 flex justify-between items-center`}>
-                                <h3 className="font-semibold text-slate-700">{key}</h3>
+                            <div className={`${theme.h} p-2 border-b border-primary-600 flex justify-between items-center`}>
+                                <h3 className="text-sm font-bold text-white pl-3">{key}</h3>
                                 <button
                                     onClick={() => handleAddItem(key)}
-                                    className="text-indigo-600 hover:text-indigo-800 p-1 rounded-full hover:bg-indigo-50 transition-colors"
+                                    className="text-white hover:text-white w-5 h-5 flex items-center justify-center rounded-full hover:bg-white/20 transition-colors"
                                     title="추가"
                                 >
-                                    <Plus size={20} />
+                                    <Plus size={14} />
                                 </button>
                             </div>
                             <div className="p-4 flex-1 overflow-y-auto max-h-[400px] min-h-[200px]">
                                 {items.length === 0 ? (
-                                    <div className="text-gray-400 text-sm text-center py-8 italic">
+                                    <div className="text-gray-400 text-sm text-center py-8 italic hidden">
                                         등록된 항목이 없습니다
                                     </div>
                                 ) : (
@@ -496,9 +486,9 @@ export default function Categories() {
                                                     onDragOver={(e) => handleDragOver(e, key)}
                                                     onDrop={(e) => handleDrop(e, key, idx)}
                                                     onDragEnd={handleDragEnd}
-                                                    className={`group flex items-center justify-between p-2 rounded-lg bg-white hover:bg-gray-50 border border-transparent hover:border-slate-100 transition-all gap-2
+                                                    className={`group flex items-center justify-between p-1 rounded-lg bg-white hover:bg-gray-50 border border-transparent hover:border-slate-100 transition-all gap-2
                                                     ${!editingState.category ? 'cursor-move' : ''}
-                                                    ${draggedItem?.category === key && draggedItem?.index === idx ? 'opacity-50 ring-2 ring-indigo-500' : ''}
+                                                    ${draggedItem?.category === key && draggedItem?.index === idx ? 'opacity-50 ring-2 ring-primary-500' : ''}
                                                 `}
                                                 >
                                                     {editingState.category === key && editingState.index === idx ? (

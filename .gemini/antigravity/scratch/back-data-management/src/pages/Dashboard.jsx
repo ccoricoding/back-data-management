@@ -90,19 +90,19 @@ export default function Dashboard() {
                 </div>
             </div>
             <div className="p-4 grid grid-cols-2 gap-4">
-                <div className="text-center p-3 bg-slate-50 rounded-lg">
+                <div className="text-center p-3 bg-primary-50 rounded-lg">
                     <p className="text-xs text-slate-500 mb-1">{labels[0]}</p>
                     <p className="text-2xl font-bold text-slate-800">{stats.count.toLocaleString()}<span className="text-sm font-normal text-slate-500 ml-1">개</span></p>
                 </div>
-                <div className="text-center p-3 bg-slate-50 rounded-lg">
+                <div className="text-center p-3 bg-primary-50 rounded-lg">
                     <p className="text-xs text-slate-500 mb-1">{labels[1]}</p>
                     <p className="text-2xl font-bold text-slate-800">{stats.sessions.toLocaleString()}<span className="text-sm font-normal text-slate-500 ml-1">회</span></p>
                 </div>
-                <div className="text-center p-3 bg-slate-50 rounded-lg">
+                <div className="text-center p-3 bg-primary-50 rounded-lg">
                     <p className="text-xs text-slate-500 mb-1">예산</p>
                     <p className="text-2xl font-bold text-slate-800">{stats.budget.toLocaleString()}<span className="text-sm font-normal text-slate-500 ml-1">원</span></p>
                 </div>
-                <div className="text-center p-3 bg-slate-50 rounded-lg">
+                <div className="text-center p-3 bg-primary-50 rounded-lg">
                     <p className="text-xs text-slate-500 mb-1">인원</p>
                     <p className="text-2xl font-bold text-slate-800">{stats.people.toLocaleString()}<span className="text-sm font-normal text-slate-500 ml-1">명</span></p>
                 </div>
@@ -118,14 +118,14 @@ export default function Dashboard() {
                     title="평생교육강좌"
                     icon={Lightbulb}
                     stats={summaryStats.education}
-                    color="bg-gradient-to-r from-indigo-500 to-indigo-600"
+                    color="bg-gradient-to-r from-primary-400 to-primary-500"
                     labels={['강좌', '횟수']}
                 />
                 <StatCard
                     title="독서문화행사"
                     icon={BookOpen}
                     stats={summaryStats.event}
-                    color="bg-gradient-to-r from-emerald-500 to-emerald-600"
+                    color="bg-gradient-to-r from-primary-400 to-primary-500"
                     labels={['행사', '횟수']}
                 />
             </div>

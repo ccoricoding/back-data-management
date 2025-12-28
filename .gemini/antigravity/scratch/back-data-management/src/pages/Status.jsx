@@ -348,18 +348,20 @@ export default function Status() {
     const handleDownloadExcel = () => {
         const now = new Date();
         const dateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-        const fileName = `백데이터_현황_${dateStr}.xlsx`;
+        const fileName = `${user?.libraryName || '도서관'}_${selectedYear}_현황_${dateStr}.xlsx`;
 
         const headerRow = COLUMNS.map(c => ({
             v: c.label,
             t: 's',
             s: {
-                font: { bold: true },
-                fill: { fgColor: { rgb: "87CEEB" } },
+                font: { bold: true, color: { rgb: "334155" } }, // slate-700
+                fill: { fgColor: { rgb: "EEF2FF" } }, // primary-50
                 alignment: { horizontal: "center", vertical: "center" },
                 border: {
-                    top: { style: 'thin' }, bottom: { style: 'thin' },
-                    left: { style: 'thin' }, right: { style: 'thin' }
+                    top: { style: 'thin', color: { rgb: "E5E7EB" } },
+                    bottom: { style: 'thin', color: { rgb: "E5E7EB" } },
+                    left: { style: 'thin', color: { rgb: "E5E7EB" } },
+                    right: { style: 'thin', color: { rgb: "E5E7EB" } }
                 }
             }
         }));
@@ -371,8 +373,10 @@ export default function Status() {
                 s: {
                     alignment: { horizontal: col.align || "center", vertical: "center" },
                     border: {
-                        top: { style: 'thin' }, bottom: { style: 'thin' },
-                        left: { style: 'thin' }, right: { style: 'thin' }
+                        top: { style: 'thin', color: { rgb: "E5E7EB" } },
+                        bottom: { style: 'thin', color: { rgb: "E5E7EB" } },
+                        left: { style: 'thin', color: { rgb: "E5E7EB" } },
+                        right: { style: 'thin', color: { rgb: "E5E7EB" } }
                     },
                     numFmt: col.type === 'number' ? '#,##0' : undefined
                 }
@@ -381,8 +385,9 @@ export default function Status() {
 
         const summaryRow = COLUMNS.map((col, idx) => {
             const commonStyle = {
-                font: { bold: true },
-                border: { top: { style: 'thin' }, bottom: { style: 'thin' }, left: { style: 'thin' }, right: { style: 'thin' } }
+                font: { bold: true, color: { rgb: "000000" } }, // Black text
+                fill: { fgColor: { rgb: "EEF2FF" } }, // primary-50
+                border: { top: { style: 'thin', color: { rgb: "E5E7EB" } }, bottom: { style: 'thin', color: { rgb: "E5E7EB" } }, left: { style: 'thin', color: { rgb: "E5E7EB" } }, right: { style: 'thin', color: { rgb: "E5E7EB" } } }
             };
             if (idx === 0) return { v: '합계', t: 's', s: { ...commonStyle, alignment: { horizontal: "center" } } };
             if (col.sum) return { v: summaries[col.key], t: 'n', s: { ...commonStyle, alignment: { horizontal: col.align || "right" }, numFmt: '#,##0' } };
@@ -393,6 +398,17 @@ export default function Status() {
         const ws = XLSX.utils.aoa_to_sheet(wsData);
         const wscols = COLUMNS.map(c => ({ wch: Math.max(c.label.length * 2, 10) }));
         ws['!cols'] = wscols;
+
+        // Row Heights
+        const rowHeights = [];
+        rowHeights[0] = { hpt: 30 }; // Header
+        for (let i = 1; i <= dataRows.length + 1; i++) {
+            rowHeights[i] = { hpt: 22 }; // Data Rows (spacious)
+        }
+        // Summary Row Height
+        rowHeights[dataRows.length + 1] = { hpt: 25 };
+
+        ws['!rows'] = rowHeights;
 
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "현황");
@@ -405,83 +421,89 @@ export default function Status() {
 
                 <button
                     onClick={handleDownloadExcel}
-                    className="flex items-center gap-2 bg-green-600 text-white px-6 py-2.5 rounded-lg hover:bg-green-700 transition-all font-medium shadow-md hover:shadow-lg"
+                    className="flex items-center gap-2 bg-primary-600 text-white px-6 py-2.5 rounded-lg hover:bg-primary-700 transition-all font-medium shadow-md hover:shadow-lg"
                 >
                     <Download size={18} />
                     엑셀 저장
                 </button>
             </div>
 
-            <div className="bg-white p-4 rounded-xl shadow-md border border-gray-100">
-                <div className="overflow-x-auto">
-                    <table className="w-full min-w-max text-sm text-left text-gray-500 border-collapse">
-                        <thead className="bg-gray-50 text-xs text-gray-700 uppercase">
-                            <tr>
-                                {COLUMNS.map((col) => (
-                                    <th key={col.key} className="px-3 py-2 border border-gray-200 whitespace-nowrap text-center">
-                                        <div className="flex justify-center items-center gap-1">
-                                            <span className="text-xs">{col.label}</span>
-                                            <button
-                                                onClick={(e) => toggleFilterPopup(col.key, e)}
-                                                className={`p-0.5 rounded hover:bg-gray-200 ${activeFilterCol === col.key ? 'text-indigo-600 bg-indigo-50' : 'text-gray-400'}`}
-                                            >
-                                                <ChevronDown size={12} />
-                                            </button>
-                                        </div>
-                                    </th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {processedData.length > 0 ? processedData.map((item) => (
-                                <tr key={item.id} className="bg-white border-b hover:bg-gray-50">
-                                    {COLUMNS.map(col => (
-                                        <td
+            <div className="bg-white p-0 rounded-xl shadow-md border border-gray-100 overflow-hidden">
+                <div className="bg-primary-500 p-2 border-b border-primary-600 flex justify-between items-center">
+                    <h2 className="text-sm font-bold text-white pl-3">현황</h2>
+                </div>
+                <div className="p-6">
+                    <div className="overflow-x-auto rounded-lg">
+                        <table className="w-full min-w-max text-sm text-left text-gray-500 border-collapse">
+                            <thead className="bg-primary-50 text-slate-700 font-bold">
+                                <tr>
+                                    {COLUMNS.map((col) => (
+                                        <th
                                             key={col.key}
-                                            className={`px-3 py-4 border border-gray-100 whitespace-nowrap text-xs ${col.align === 'center' ? 'text-center' : col.align === 'right' ? 'text-right' : 'text-left'} ${col.key === 'title' ? 'cursor-pointer hover:text-indigo-600 hover:underline' : ''}`}
-                                            onClick={col.key === 'title' ? () => setEditConfirm({ isOpen: true, itemId: item.id }) : undefined}
+                                            className="px-3 py-2 border border-gray-200 whitespace-nowrap text-center cursor-pointer hover:bg-white/50 text-xs"
+                                            onClick={(e) => toggleFilterPopup(col.key, e)}
                                         >
-                                            {col.type === 'number' ? (item[col.key] || 0).toLocaleString() : (item[col.key] || '')}
-                                        </td>
+                                            <div className="flex justify-center items-center gap-1">
+                                                <span className="text-xs font-bold text-slate-600">{col.label}</span>
+                                                {activeFilterCol === col.key && (
+                                                    <span className="hidden">▼</span>
+                                                )}
+                                            </div>
+                                        </th>
                                     ))}
                                 </tr>
-                            )) : (
-                                <tr>
-                                    <td colSpan={COLUMNS.length} className="px-4 py-8 text-center text-gray-400">
-                                        데이터가 없습니다.
-                                    </td>
+                            </thead>
+                            <tbody>
+                                {processedData.length > 0 ? processedData.map((item) => (
+                                    <tr key={item.id} className="bg-white border-b hover:bg-gray-50">
+                                        {COLUMNS.map(col => (
+                                            <td
+                                                key={col.key}
+                                                className={`px-3 py-4 border border-gray-100 whitespace-nowrap text-xs ${col.align === 'center' ? 'text-center' : col.align === 'right' ? 'text-right' : 'text-left'} ${col.key === 'title' ? 'cursor-pointer hover:text-primary-600 hover:underline' : ''}`}
+                                                onClick={col.key === 'title' ? () => setEditConfirm({ isOpen: true, itemId: item.id }) : undefined}
+                                            >
+                                                {col.type === 'number' ? (item[col.key] || 0).toLocaleString() : (item[col.key] || '')}
+                                            </td>
+                                        ))}
+                                    </tr>
+                                )) : (
+                                    <tr>
+                                        <td colSpan={COLUMNS.length} className="px-4 py-8 text-center text-gray-400">
+                                            데이터가 없습니다.
+                                        </td>
+                                    </tr>
+                                )}
+                                {/* Summary Row */}
+                                <tr className="bg-primary-50 font-bold border-t-2 border-primary-200 text-primary-700">
+                                    {COLUMNS.map((col, idx) => {
+                                        if (idx === 0) return <td key={col.key} className="px-3 py-2 border border-gray-200 text-center text-xs">합계</td>;
+
+                                        // 요청사항: 제목(title) 열 하단에 건수 표시
+                                        if (col.key === 'title') {
+                                            return (
+                                                <td key={col.key} className="px-3 py-2 border border-gray-200 text-center text-xs text-primary-700">
+                                                    {processedData.length.toLocaleString()} 개
+                                                </td>
+                                            );
+                                        }
+
+                                        if (col.sum) {
+                                            let unit = '명'; // Default to person count
+                                            if (col.key === 'count') unit = '회';
+                                            else if (col.key.startsWith('amt')) unit = '원';
+
+                                            return (
+                                                <td key={col.key} className={`px-3 py-2 border border-gray-200 text-xs ${col.align === 'center' ? 'text-center' : col.align === 'right' ? 'text-right' : 'text-left'}`}>
+                                                    {summaries[col.key]?.toLocaleString()} {unit}
+                                                </td>
+                                            );
+                                        }
+                                        return <td key={col.key} className="px-3 py-2 border border-gray-200"></td>;
+                                    })}
                                 </tr>
-                            )}
-                            {/* Summary Row */}
-                            <tr className="bg-indigo-50 font-bold border-t-2 border-indigo-200 text-indigo-700">
-                                {COLUMNS.map((col, idx) => {
-                                    if (idx === 0) return <td key={col.key} className="px-3 py-2 border border-gray-200 text-center text-xs">합계</td>;
-
-                                    // 요청사항: 제목(title) 열 하단에 건수 표시
-                                    if (col.key === 'title') {
-                                        return (
-                                            <td key={col.key} className="px-3 py-2 border border-gray-200 text-center text-xs text-indigo-700">
-                                                {processedData.length.toLocaleString()} 개
-                                            </td>
-                                        );
-                                    }
-
-                                    if (col.sum) {
-                                        let unit = '명'; // Default to person count
-                                        if (col.key === 'count') unit = '회';
-                                        else if (col.key.startsWith('amt')) unit = '원';
-
-                                        return (
-                                            <td key={col.key} className={`px-3 py-2 border border-gray-200 text-xs ${col.align === 'center' ? 'text-center' : col.align === 'right' ? 'text-right' : 'text-left'}`}>
-                                                {summaries[col.key]?.toLocaleString()} {unit}
-                                            </td>
-                                        );
-                                    }
-                                    return <td key={col.key} className="px-3 py-2 border border-gray-200"></td>;
-                                })}
-                            </tr>
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -518,7 +540,7 @@ export default function Status() {
                                 placeholder="검색"
                                 value={filters[activeFilterCol]?.search || ''}
                                 onChange={(e) => handleFilterSearchChange(activeFilterCol, e.target.value)}
-                                className="w-full text-xs p-2 pl-8 border border-gray-300 rounded focus:ring-1 focus:ring-indigo-500"
+                                className="w-full text-xs p-2 pl-8 border border-gray-300 rounded focus:ring-1 focus:ring-primary-500"
                             />
                             <Filter size={12} className="absolute left-2.5 top-2.5 text-gray-400" />
                         </div>
@@ -528,7 +550,7 @@ export default function Status() {
                         <label className="flex items-center px-2 py-1.5 hover:bg-gray-50 cursor-pointer">
                             <input
                                 type="checkbox"
-                                className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 mr-2"
+                                className="rounded border-gray-300 text-primary-600 focus:ring-primary-500 mr-2"
                                 checked={filters[activeFilterCol]?.selected?.size === getUniqueValues(rawData, activeFilterCol).length}
                                 onChange={(e) => handleSelectAll(activeFilterCol, e.target.checked, getUniqueValues(rawData, activeFilterCol))}
                             />
@@ -541,7 +563,7 @@ export default function Status() {
                                 <label key={val} className="flex items-center px-2 py-1.5 hover:bg-gray-50 cursor-pointer">
                                     <input
                                         type="checkbox"
-                                        className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 mr-2"
+                                        className="rounded border-gray-300 text-primary-600 focus:ring-primary-500 mr-2"
                                         checked={filters[activeFilterCol]?.selected?.has(val) || false}
                                         onChange={(e) => handleFilterCheckboxChange(activeFilterCol, val, e.target.checked)}
                                     />
@@ -571,7 +593,7 @@ export default function Status() {
                                     navigate(`/input?id=${editConfirm.itemId}`);
                                     setEditConfirm({ isOpen: false, itemId: null });
                                 }}
-                                className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 font-medium"
+                                className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 font-medium"
                             >
                                 확인
                             </button>
