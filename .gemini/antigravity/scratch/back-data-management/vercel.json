@@ -4,6 +4,10 @@
     "outputDirectory": "dist",
     "rewrites": [
         {
+            "source": "/api/db-usage",
+            "destination": "/api/db-usage.js"
+        },
+        {
             "source": "/api/(.*)",
             "destination": "/api/$1"
         },
