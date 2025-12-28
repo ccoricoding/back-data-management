@@ -166,46 +166,27 @@ export default function Dashboard() {
                 />
             </div>
 
-            {/* Database Usage Card - Only show if loaded successfully */}
-            {dbUsageLoaded && (
-                <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
-                    <div className="bg-gradient-to-r from-purple-500 to-purple-600 p-4">
-                        <div className="flex items-center gap-3">
-                            <div className="bg-white/20 p-2 rounded-lg">
-                                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
-                                </svg>
-                            </div>
-                            <h3 className="text-white font-bold text-lg">데이터베이스 용량</h3>
-                        </div>
+            {/* Database Usage Widget - Minimal Style */}
+            {/* Database Usage Widget - Transparent & Minimal */}
+            <div className="flex justify-end mt-4">
+                <div className="w-48 px-2">
+                    <div className="flex justify-end items-center mb-1.5">
+                        <span className="text-[10px] font-bold text-slate-500">
+                            {dbUsage.usage.toFixed(2)} MB / {dbUsage.limit} MB
+                        </span>
                     </div>
-                    <div className="p-6">
-                        <div className="flex justify-between items-center mb-2">
-                            <span className="text-sm text-slate-600">사용량</span>
-                            <span className="text-sm font-bold text-slate-800">
-                                {dbUsage.usage.toFixed(2)} MB / {dbUsage.limit} MB
-                            </span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-4 mb-2 overflow-hidden">
-                            <div
-                                className={`h-4 rounded-full transition-all duration-500 ${dbUsage.percentage > 80 ? 'bg-red-500' :
-                                    dbUsage.percentage > 60 ? 'bg-yellow-500' :
-                                        'bg-green-500'
-                                    }`}
-                                style={{ width: `${Math.min(dbUsage.percentage, 100)}%` }}
-                            />
-                        </div>
-                        <div className="flex justify-between items-center">
-                            <span className="text-xs text-slate-500">
-                                {dbUsage.percentage.toFixed(1)}% 사용 중
-                            </span>
-                            <span className="text-xs text-slate-500">
-                                남은 용량: {(dbUsage.limit - dbUsage.usage).toFixed(2)} MB
-                            </span>
-                        </div>
+                    <div className="w-full bg-gray-200 rounded-full h-1.5 overflow-hidden">
+                        <div
+                            className={`h-1.5 rounded-full transition-all duration-500 ${dbUsage.percentage > 80 ? 'bg-red-500' :
+                                dbUsage.percentage > 60 ? 'bg-yellow-500' :
+                                    'bg-green-500'
+                                }`}
+                            style={{ width: `${Math.min(dbUsage.percentage, 100)}%` }}
+                        />
                     </div>
                 </div>
-            )}
+            </div>
         </div>
     );
 }
+

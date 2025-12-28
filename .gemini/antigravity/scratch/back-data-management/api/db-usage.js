@@ -1,7 +1,5 @@
 // Vercel Serverless Function to fetch Supabase database usage
-// Uses SQL query via RPC instead of Management API to avoid authentication issues
-
-import { createClient } from '@supabase/supabase-js';
+// Uses Management API to get comprehensive project usage data (DB + Storage)
 
 export default async function handler(req, res) {
     // Only allow GET requests
@@ -9,68 +7,72 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    // Use standard project credentials (these are less likely to have config issues)
-    const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
-    const supabaseKey = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY;
+    // Use environment variables (without VITE_ prefix for serverless functions)
+    const projectId = process.env.SUPABASE_PROJECT_ID || process.env.VITE_SUPABASE_PROJECT_ID;
+    const apiKey = process.env.SUPABASE_MANAGEMENT_API_KEY || process.env.VITE_SUPABASE_MANAGEMENT_API_KEY;
 
-    if (!supabaseUrl || !supabaseKey) {
+    // Validate credentials
+    if (!projectId || !apiKey) {
+        console.error('Missing credentials in Vercel env vars');
         return res.status(500).json({
             error: 'Supabase credentials not configured',
-            usage: 0,
-            limit: 500,
-            percentage: 0
+            details: 'Please set SUPABASE_PROJECT_ID and SUPABASE_MANAGEMENT_API_KEY in Vercel Settings'
         });
     }
 
     try {
-        const supabase = createClient(supabaseUrl, supabaseKey);
+        console.log(`Fetching usage for project: ${projectId}`);
+        // Log key prefix for debugging (security safe)
+        console.log(`Using API Key starting with: ${apiKey.substring(0, 4)}...`);
 
-        // Query database size using RPC function
-        // Note: You must have created the 'get_database_size' function in SQL Editor
-        const { data, error } = await supabase.rpc('get_database_size');
+        const response = await fetch(
+            `https://api.supabase.com/v1/projects/${projectId}/usage`,
+            {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`,
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
 
-        if (error) {
-            console.warn('RPC get_database_size failed/undefined, fallback to dummy data:', error);
-            // This happens if the user hasn't created the SQL function yet.
-            // Return 0 usage but don't crash the UI with 500 error.
-            return res.status(200).json({
-                usage: 0,
-                limit: 500,
-                percentage: 0,
-                error: `RPC Error: ${error.message}. Please create 'get_database_size' function in Supabase SQL Editor.`
-            });
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error(`Supabase API Error (${response.status}): ${errorText}`);
+
+            // Helper for user debugging
+            if (response.status === 401) {
+                throw new Error('Unauthorized (401). Please check if SUPABASE_MANAGEMENT_API_KEY is a valid Personal Access Token (starts with sbp_).');
+            } else if (response.status === 404) {
+                throw new Error(`Project Not Found (404). Check if SUPABASE_PROJECT_ID (${projectId}) is correct.`);
+            }
+
+            throw new Error(`API request failed: ${response.status} - ${errorText}`);
         }
 
-        // Parse the result from postgres (e.g., "1.5 MB", "150 kB", "1 GB")
-        const sizeStr = data || '0 MB';
-        let usageMB = 0;
+        const data = await response.json();
 
-        if (String(sizeStr).includes('GB')) {
-            usageMB = parseFloat(sizeStr) * 1024;
-        } else if (String(sizeStr).includes('MB')) {
-            usageMB = parseFloat(sizeStr);
-        } else if (String(sizeStr).includes('kB')) {
-            usageMB = parseFloat(sizeStr) / 1024;
-        } else if (String(sizeStr).includes('bytes')) {
-            usageMB = parseFloat(sizeStr) / (1024 * 1024);
-        }
+        // Calculate total usage (DB + Storage)
+        const dbUsageBytes = data.db_size?.usage || 0;
+        const storageUsageBytes = data.storage_size?.usage || 0;
 
-        const limitMB = 500; // Supabase free tier limit (hardcoded for now)
+        // Convert to MB
+        const totalUsageMB = (dbUsageBytes + storageUsageBytes) / (1024 * 1024);
+        const limitMB = (data.db_size?.limit || 524288000) / (1024 * 1024); // Default 500MB
 
-        // Add offset to match reported size in Supabase dashboard
-        // User observed ~25.33MB baseline while query returned ~11MB
-        const offsetMB = 14.33;
-        const adjustedUsageMB = usageMB + offsetMB;
-
-        const percentage = (adjustedUsageMB / limitMB) * 100;
+        const percentage = (totalUsageMB / limitMB) * 100;
 
         return res.status(200).json({
-            usage: adjustedUsageMB,
+            usage: totalUsageMB,
             limit: limitMB,
-            percentage: percentage
+            percentage: percentage,
+            details: {
+                database: dbUsageBytes / (1024 * 1024),
+                storage: storageUsageBytes / (1024 * 1024)
+            }
         });
     } catch (error) {
-        console.error('Failed to fetch database usage:', error);
+        console.error('Failed to fetch database usage:', error.message);
         return res.status(500).json({
             error: error.message,
             usage: 0,

@@ -284,7 +284,7 @@ export default function UserManagement() {
         setEditForm({
             name: user.name,
             libraryName: user.libraryName || '',
-            password: user.password || '',
+            password: '', // Password field starts empty
             role: user.role || 'general'
         });
     };
@@ -295,7 +295,12 @@ export default function UserManagement() {
     };
 
     const saveEdit = async (userId) => {
-        const updatedUser = await db.updateUserInfo(userId, editForm);
+        const updates = { ...editForm };
+        if (!updates.password) {
+            delete updates.password;
+        }
+
+        const updatedUser = await db.updateUserInfo(userId, updates);
         if (updatedUser) {
             setEditingUserId(null);
             loadUsers();
@@ -452,6 +457,7 @@ export default function UserManagement() {
                                         {isEditing ? (
                                             <input
                                                 type="text"
+                                                autoComplete="new-password"
                                                 className="block w-full px-2 py-1 text-xs border border-gray-300 rounded"
                                                 value={editForm.password}
                                                 onChange={(e) => setEditForm({ ...editForm, password: e.target.value })}
