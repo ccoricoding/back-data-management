@@ -118,14 +118,14 @@ export default function Dashboard() {
                     title="평생교육강좌"
                     icon={BookOpen}
                     stats={summaryStats.education}
-                    color="bg-[#f8d1be]"
+                    color="bg-[#f8edbe]"
                     labels={['강좌', '횟수']}
                 />
                 <StatCard
                     title="독서문화행사"
                     icon={Lightbulb}
                     stats={summaryStats.event}
-                    color="bg-[#d8f8be]"
+                    color="bg-[#f8edbe]"
                     labels={['행사', '횟수']}
                 />
             </div>

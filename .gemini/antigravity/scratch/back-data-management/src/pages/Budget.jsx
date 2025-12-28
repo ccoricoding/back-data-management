@@ -137,7 +137,8 @@ export default function Budget() {
 
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "예산");
-        XLSX.writeFile(wb, fileName);
+        const today = new Date().toISOString().split('T')[0];
+        XLSX.writeFile(wb, `예산_${today}.xlsx`);
     };
 
     return (
@@ -145,7 +146,7 @@ export default function Budget() {
             <div className="flex justify-end items-center mb-4">
                 <button
                     onClick={handleDownloadExcel}
-                    className="flex items-center gap-2 bg-green-600 text-white px-6 py-2.5 rounded-lg hover:bg-green-700 transition-all font-medium shadow-md hover:shadow-lg"
+                    className="flex items-center gap-2 bg-[#aaf376] text-slate-800 px-6 py-2.5 rounded-lg hover:bg-[#99e265] transition-all font-medium shadow-md hover:shadow-lg"
                 >
                     <Download size={18} />
                     엑셀 저장

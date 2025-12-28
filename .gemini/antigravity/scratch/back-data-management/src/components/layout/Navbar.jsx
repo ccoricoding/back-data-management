@@ -51,7 +51,7 @@ export default function Navbar() {
                                 ))}
                             </select>
                         </div>
-                        <div className="text-xs font-medium tracking-tight">
+                        <div className="text-xs font-bold tracking-tight">
                             {user.libraryName} 백데이터 관리
                         </div>
                     </div>
@@ -62,8 +62,8 @@ export default function Navbar() {
                                     key={item.name}
                                     to={item.path}
                                     className={`flex items-center px-2 py-2 rounded-md text-xs font-medium transition-colors ${isActive(item.path)
-                                        ? 'bg-[#b6e8a4] text-slate-800'
-                                        : 'text-slate-700 hover:bg-[#b6e8a4] hover:text-slate-800'
+                                        ? 'bg-[#f3d876] text-slate-800'
+                                        : 'text-slate-700 hover:bg-[#f3d876] hover:text-slate-800'
                                         }`}
                                 >
                                     <item.icon className="w-3.5 h-3.5 mr-1.5" />
@@ -76,7 +76,7 @@ export default function Navbar() {
                         <span className="mr-4 text-sm text-slate-700">{user.name}님</span>
                         <button
                             onClick={handleLogout}
-                            className="p-1 rounded-full text-slate-700 hover:bg-[#b6e8a4] focus:outline-none"
+                            className="p-1 rounded-full text-slate-700 hover:bg-[#f3d876] focus:outline-none"
                             title="로그아웃"
                         >
                             <LogOut className="w-5 h-5 text-slate-700" />

@@ -326,7 +326,7 @@ export default function DataInput() {
                     )}
                     <button
                         onClick={handleSave}
-                        className="flex items-center gap-2 bg-indigo-600 text-white px-6 py-2.5 rounded-lg hover:bg-indigo-700 transition-all font-medium shadow-md hover:shadow-lg focus:ring-4 focus:ring-indigo-100"
+                        className="flex items-center gap-2 bg-[#f3d876] text-slate-800 px-6 py-2.5 rounded-lg hover:bg-[#e9ce6d] transition-all font-bold shadow-md hover:shadow-lg disabled:opacity-50"
                     >
                         <Save size={18} />
                         작업 저장
@@ -335,148 +335,145 @@ export default function DataInput() {
             </div>
 
             {/* Box 1: 개요 */}
-            <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100 transition-shadow hover:shadow-lg">
-                <div className="flex items-center gap-2 mb-6 border-b border-gray-100 pb-2">
-                    <div className="h-6 w-1 bg-indigo-500 rounded-full"></div>
-                    <h2 className="text-lg font-bold text-slate-800">개요</h2>
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div className="bg-[#f8edbe] px-4 py-2 border-b border-gray-200">
+                    <h3 className="font-semibold text-slate-800">개요</h3>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-6">
-                    {/* Row 1 */}
-                    <div className="md:col-span-2">
-                        <div className={inputWrapperClass}>
-                            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5 text-center">구분</label>
-                            <select name="category" value={overview.category} onChange={handleOverviewChange} className={selectClass}>
-                                <option value="">선택</option>
-                                {categories['구분']?.map((c, idx) => {
-                                    const label = renderCategoryOption(c);
-                                    return <option key={idx} value={label}>{label}</option>
-                                })}
-                            </select>
+                <div className="p-4 space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-6">
+                        {/* Row 1 */}
+                        <div className="md:col-span-2">
+                            <div className={inputWrapperClass}>
+                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5 text-center">구분</label>
+                                <select name="category" value={overview.category} onChange={handleOverviewChange} className={selectClass}>
+                                    <option value="">선택</option>
+                                    {categories['구분']?.map((c, idx) => {
+                                        const label = renderCategoryOption(c);
+                                        return <option key={idx} value={label}>{label}</option>
+                                    })}
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div className="md:col-span-1">
-                        <div className={inputWrapperClass}>
-                            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5 text-center">제목</label>
-                            <input type="text" name="title" value={overview.title} onChange={handleOverviewChange} className={inputClass} />
+                        <div className="md:col-span-1">
+                            <div className={inputWrapperClass}>
+                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5 text-center">제목</label>
+                                <input type="text" name="title" value={overview.title} onChange={handleOverviewChange} className={inputClass} />
+                            </div>
                         </div>
-                    </div>
-                    <div className="md:col-span-1">
-                        <div className={inputWrapperClass}>
-                            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5 text-center">강사</label>
-                            <input type="text" name="instructor" value={overview.instructor} onChange={handleOverviewChange} className={inputClass} />
+                        <div className="md:col-span-1">
+                            <div className={inputWrapperClass}>
+                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5 text-center">강사</label>
+                                <input type="text" name="instructor" value={overview.instructor} onChange={handleOverviewChange} className={inputClass} />
+                            </div>
                         </div>
-                    </div>
-                    <div className="md:col-span-1">
-                        <div className={inputWrapperClass}>
-                            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5 text-center">횟수</label>
-                            <select name="count" value={overview.count} onChange={handleOverviewChange} className={selectClass}>
-                                {countOptions.map(num => <option key={num} value={num}>{num}회</option>)}
-                            </select>
+                        <div className="md:col-span-1">
+                            <div className={inputWrapperClass}>
+                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5 text-center">횟수</label>
+                                <select name="count" value={overview.count} onChange={handleOverviewChange} className={selectClass}>
+                                    {countOptions.map(num => <option key={num} value={num}>{num}회</option>)}
+                                </select>
+                            </div>
+                        </div>
+
+                        {/* Row 2 */}
+                        <div>
+                            <div className={inputWrapperClass}>
+                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5 text-center">평일/주말</label>
+                                <select name="weekType" value={overview.weekType} onChange={handleOverviewChange} className={selectClass}>
+                                    <option value="">선택</option>
+                                    {categories['평일/주말']?.map(c => <option key={c} value={c}>{c}</option>)}
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <div className={inputWrapperClass}>
+                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5 text-center">시작일</label>
+                                <input type="date" name="startDate" min="2000-01-01" max="2099-12-31" value={overview.startDate} onChange={handleOverviewChange} className={inputClass} />
+                            </div>
+                        </div>
+                        <div>
+                            <div className={inputWrapperClass}>
+                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5 text-center">종료일</label>
+                                <input type="date" name="endDate" min="2000-01-01" max="2099-12-31" value={overview.endDate} onChange={handleOverviewChange} className={inputClass} />
+                            </div>
+                        </div>
+                        <div>
+                            <div className={inputWrapperClass}>
+                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5 text-center">시작시간</label>
+                                <select name="startTime" value={overview.startTime} onChange={handleOverviewChange} className={selectClass}>
+                                    {timeOptions.map(t => <option key={t} value={t}>{t}</option>)}
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <div className={inputWrapperClass}>
+                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5 text-center">종료시간</label>
+                                <select name="endTime" value={overview.endTime} onChange={handleOverviewChange} className={selectClass}>
+                                    {timeOptions.map(t => <option key={t} value={t}>{t}</option>)}
+                                </select>
+                            </div>
                         </div>
                     </div>
 
-                    {/* Row 2 */}
-                    <div>
-                        <div className={inputWrapperClass}>
-                            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5 text-center">평일/주말</label>
-                            <select name="weekType" value={overview.weekType} onChange={handleOverviewChange} className={selectClass}>
-                                <option value="">선택</option>
-                                {categories['평일/주말']?.map(c => <option key={c} value={c}>{c}</option>)}
-                            </select>
+                    <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+                        {/* Row 3 */}
+                        <div>
+                            <div className={inputWrapperClass}>
+                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5 text-center">관내/관외</label>
+                                <select name="inOut" value={overview.inOut} onChange={handleOverviewChange} className={selectClass}>
+                                    <option value="">선택</option>
+                                    {categories['관내/관외']?.map(c => <option key={c} value={c}>{c}</option>)}
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div>
-                        <div className={inputWrapperClass}>
-                            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5 text-center">시작일</label>
-                            <input type="date" name="startDate" min="2000-01-01" max="2099-12-31" value={overview.startDate} onChange={handleOverviewChange} className={inputClass} />
+                        <div>
+                            <div className={inputWrapperClass}>
+                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5 text-center">장소</label>
+                                <input type="text" name="place" value={overview.place} onChange={handleOverviewChange} className={inputClass} />
+                            </div>
                         </div>
-                    </div>
-                    <div>
-                        <div className={inputWrapperClass}>
-                            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5 text-center">종료일</label>
-                            <input type="date" name="endDate" min="2000-01-01" max="2099-12-31" value={overview.endDate} onChange={handleOverviewChange} className={inputClass} />
+                        <div>
+                            <div className={inputWrapperClass}>
+                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5 text-center">연계</label>
+                                <input type="text" name="connection" value={overview.connection} onChange={handleOverviewChange} className={inputClass} />
+                            </div>
                         </div>
-                    </div>
-                    <div>
-                        <div className={inputWrapperClass}>
-                            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5 text-center">시작시간</label>
-                            <select name="startTime" value={overview.startTime} onChange={handleOverviewChange} className={selectClass}>
-                                {timeOptions.map(t => <option key={t} value={t}>{t}</option>)}
-                            </select>
+                        <div>
+                            <div className={inputWrapperClass}>
+                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5 text-center">대상</label>
+                                <select name="target" value={overview.target} onChange={handleOverviewChange} className={selectClass}>
+                                    <option value="">선택</option>
+                                    {categories['대상']?.map(c => <option key={c} value={c}>{c}</option>)}
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div>
-                        <div className={inputWrapperClass}>
-                            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5 text-center">종료시간</label>
-                            <select name="endTime" value={overview.endTime} onChange={handleOverviewChange} className={selectClass}>
-                                {timeOptions.map(t => <option key={t} value={t}>{t}</option>)}
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
-                    {/* Row 3 */}
-                    <div>
-                        <div className={inputWrapperClass}>
-                            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5 text-center">관내/관외</label>
-                            <select name="inOut" value={overview.inOut} onChange={handleOverviewChange} className={selectClass}>
-                                <option value="">선택</option>
-                                {categories['관내/관외']?.map(c => <option key={c} value={c}>{c}</option>)}
-                            </select>
-                        </div>
-                    </div>
-                    <div>
-                        <div className={inputWrapperClass}>
-                            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5 text-center">장소</label>
-                            <input type="text" name="place" value={overview.place} onChange={handleOverviewChange} className={inputClass} />
-                        </div>
-                    </div>
-                    <div>
-                        <div className={inputWrapperClass}>
-                            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5 text-center">연계</label>
-                            <input type="text" name="connection" value={overview.connection} onChange={handleOverviewChange} className={inputClass} />
-                        </div>
-                    </div>
-                    <div>
-                        <div className={inputWrapperClass}>
-                            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5 text-center">대상</label>
-                            <select name="target" value={overview.target} onChange={handleOverviewChange} className={selectClass}>
-                                <option value="">선택</option>
-                                {categories['대상']?.map(c => <option key={c} value={c}>{c}</option>)}
-                            </select>
-                        </div>
-                    </div>
-                    <div>
-                        <div className={inputWrapperClass}>
-                            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5 text-center">방법</label>
-                            <select name="method" value={overview.method} onChange={handleOverviewChange} className={selectClass}>
-                                <option value="">선택</option>
-                                {categories['방법']?.map(c => <option key={c} value={c}>{c}</option>)}
-                            </select>
+                        <div>
+                            <div className={inputWrapperClass}>
+                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5 text-center">방법</label>
+                                <select name="method" value={overview.method} onChange={handleOverviewChange} className={selectClass}>
+                                    <option value="">선택</option>
+                                    {categories['방법']?.map(c => <option key={c} value={c}>{c}</option>)}
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
             {/* Box 2: 예산 */}
-            <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100 transition-shadow hover:shadow-lg">
-                <div className="flex items-center gap-2 mb-6 border-b border-gray-100 pb-2">
-                    <div className="h-6 w-1 bg-green-500 rounded-full"></div>
-                    <h2 className="text-lg font-bold text-slate-800">예산</h2>
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mt-6">
+                <div className="bg-[#f8edbe] px-4 py-2 border-b border-gray-200">
+                    <h3 className="font-semibold text-slate-800">예산</h3>
                 </div>
-
-                <div className="overflow-x-auto">
-                    <table className="min-w-full table-fixed">
-                        <thead>
-                            <tr className="bg-gray-50">
-                                <th className="w-1/6 px-3 py-2 text-xs font-bold text-slate-500 text-center border border-gray-200">구분</th>
-                                <th className="w-1/6 px-3 py-2 text-xs font-bold text-slate-500 text-center border border-gray-200">사업내역(대)</th>
-                                <th className="w-1/6 px-3 py-2 text-xs font-bold text-slate-500 text-center border border-gray-200">사업내역(중)</th>
-                                <th className="w-1/6 px-3 py-2 text-xs font-bold text-slate-500 text-center border border-gray-200">사업내역(소)</th>
-                                <th className="w-1/6 px-3 py-2 text-xs font-bold text-slate-500 text-center border border-gray-200">목-세목</th>
-                                <th className="w-1/6 px-3 py-2 text-xs font-bold text-slate-500 text-center border border-gray-200">지출금액</th>
+                <div className="p-4">
+                    <table className="w-full text-sm text-left text-gray-500">
+                        <thead className="bg-[#f8edbe] text-xs text-slate-800 uppercase font-bold">
+                            <tr>
+                                <th className="px-3 py-2 border border-gray-200 text-center">목</th>
+                                <th className="px-3 py-2 border border-gray-200 text-center">세목</th>
+                                <th className="px-3 py-2 border border-gray-200 text-center">금액</th>
+                                <th className="px-3 py-2 border border-gray-200 text-center"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -502,13 +499,105 @@ export default function DataInput() {
             </div>
 
             {/* Box 3: 실적 */}
-            <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100 transition-shadow hover:shadow-lg">
-                <div className="flex justify-between items-center mb-6 pb-2 border-b border-gray-100">
-                    <div className="flex items-center gap-2">
-                        <div className="h-6 w-1 bg-rose-500 rounded-full"></div>
-                        <h2 className="text-lg font-bold text-slate-800">실적</h2>
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mt-6">
+                <div className="bg-[#f8edbe] px-4 py-2 border-b border-gray-200">
+                    <h3 className="font-semibold text-slate-800">실적</h3>
+                </div>
+
+                <div className="p-4">
+                    <div className="overflow-x-auto mb-4">
+                        <table className="w-full text-sm text-left text-gray-500">
+                            <thead className="bg-[#f8edbe] text-xs text-slate-800 uppercase font-bold">
+                                <tr>
+                                    <th rowSpan="2" className="px-3 py-2 border border-gray-200 text-center whitespace-nowrap min-w-[120px]">일자/회차</th>
+                                    <th colSpan="3" className="px-3 py-2 border border-gray-200 text-center bg-[#f8edbe]">성인</th>
+                                    <th colSpan="3" className="px-3 py-2 border border-gray-200 text-center bg-[#f8edbe]">중고생</th>
+                                    <th colSpan="3" className="px-3 py-2 border border-gray-200 text-center bg-[#f8edbe]">어린이</th>
+                                    <th rowSpan="2" className="px-3 py-2 border border-gray-200 text-center w-10"></th>
+                                </tr>
+                                <tr>
+                                    <th className="px-2 py-1 border border-gray-200 text-center bg-[#f8edbe] text-[10px]">남</th>
+                                    <th className="px-2 py-1 border border-gray-200 text-center bg-[#f8edbe] text-[10px]">여</th>
+                                    <th className="px-2 py-1 border border-gray-200 text-center bg-[#f8edbe] text-[10px]">계</th>
+                                    <th className="px-2 py-1 border border-gray-200 text-center bg-[#f8edbe] text-[10px]">남</th>
+                                    <th className="px-2 py-1 border border-gray-200 text-center bg-[#f8edbe] text-[10px]">여</th>
+                                    <th className="px-2 py-1 border border-gray-200 text-center bg-[#f8edbe] text-[10px]">계</th>
+                                    <th className="px-2 py-1 border border-gray-200 text-center bg-[#f8edbe] text-[10px]">남</th>
+                                    <th className="px-2 py-1 border border-gray-200 text-center bg-[#f8edbe] text-[10px]">여</th>
+                                    <th className="px-2 py-1 border border-gray-200 text-center bg-[#f8edbe] text-[10px]">계</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {performances.map((perf, index) => (
+                                    <tr key={index} className="hover:bg-slate-50">
+                                        <td className="px-3 py-2 text-sm text-center border border-gray-200 font-bold text-slate-400">{index + 1}</td>
+                                        <td className="px-3 py-2 border border-gray-200">
+                                            <input
+                                                type="date"
+                                                min="2000-01-01"
+                                                max="2099-12-31"
+                                                value={perf.opDate}
+                                                onChange={(e) => handlePerformanceChange(index, 'opDate', e.target.value)}
+                                                className="w-full border-gray-300 rounded-md focus:ring-rose-500 focus:border-rose-500 text-sm py-1.5 px-2 text-center"
+                                            />
+                                        </td>
+                                        <td className="px-3 py-2 border border-gray-200">
+                                            <NumberInput
+                                                value={perf.adultM}
+                                                onChange={(val) => handlePerformanceNumberChange(index, 'adultM', val)}
+                                                className="w-full border-gray-300 rounded-md focus:ring-rose-500 focus:border-rose-500 text-sm py-1.5 px-2 text-right"
+                                            />
+                                        </td>
+                                        <td className="px-3 py-2 border border-gray-200">
+                                            <NumberInput
+                                                value={perf.adultF}
+                                                onChange={(val) => handlePerformanceNumberChange(index, 'adultF', val)}
+                                                className="w-full border-gray-300 rounded-md focus:ring-rose-500 focus:border-rose-500 text-sm py-1.5 px-2 text-right"
+                                            />
+                                        </td>
+                                        <td className="px-3 py-2 border border-gray-200">
+                                            <NumberInput
+                                                value={perf.teenM}
+                                                onChange={(val) => handlePerformanceNumberChange(index, 'teenM', val)}
+                                                className="w-full border-gray-300 rounded-md focus:ring-rose-500 focus:border-rose-500 text-sm py-1.5 px-2 text-right"
+                                            />
+                                        </td>
+                                        <td className="px-3 py-2 border border-gray-200">
+                                            <NumberInput
+                                                value={perf.teenF}
+                                                onChange={(val) => handlePerformanceNumberChange(index, 'teenF', val)}
+                                                className="w-full border-gray-300 rounded-md focus:ring-rose-500 focus:border-rose-500 text-sm py-1.5 px-2 text-right"
+                                            />
+                                        </td>
+                                        <td className="px-3 py-2 border border-gray-200">
+                                            <NumberInput
+                                                value={perf.childM}
+                                                onChange={(val) => handlePerformanceNumberChange(index, 'childM', val)}
+                                                className="w-full border-gray-300 rounded-md focus:ring-rose-500 focus:border-rose-500 text-sm py-1.5 px-2 text-right"
+                                            />
+                                        </td>
+                                        <td className="px-3 py-2 border border-gray-200">
+                                            <NumberInput
+                                                value={perf.childF}
+                                                onChange={(val) => handlePerformanceNumberChange(index, 'childF', val)}
+                                                className="w-full border-gray-300 rounded-md focus:ring-rose-500 focus:border-rose-500 text-sm py-1.5 px-2 text-right"
+                                            />
+                                        </td>
+                                        <td className="px-3 py-2 border border-gray-200 text-center">
+                                            <button
+                                                onClick={() => handleRowDeleteClick(index)}
+                                                className="p-2 text-gray-400 hover:text-red-500 rounded-full hover:bg-red-50 transition-colors"
+                                                title="행 삭제"
+                                            >
+                                                <Trash2 size={16} />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex justify-end gap-2">
                         <button
                             onClick={addPerformanceRow}
                             className="flex items-center gap-1 p-1 hover:bg-black/10 rounded transition-colors text-black"
@@ -516,117 +605,25 @@ export default function DataInput() {
                         >
                             <Plus size={20} />
                         </button>
+
                     </div>
                 </div>
-
-                <div className="overflow-x-auto">
-                    <table className="min-w-full">
-                        <thead>
-                            <tr className="bg-gray-50">
-                                <th className="px-3 py-2 text-xs font-bold text-slate-500 text-center border border-gray-200">회</th>
-                                <th className="px-3 py-2 text-xs font-bold text-slate-500 text-center border border-gray-200">운영일</th>
-                                <th className="px-3 py-2 text-xs font-bold text-slate-500 text-center border border-gray-200">성인(남)</th>
-                                <th className="px-3 py-2 text-xs font-bold text-slate-500 text-center border border-gray-200">성인(여)</th>
-                                <th className="px-3 py-2 text-xs font-bold text-slate-500 text-center border border-gray-200">중고생(남)</th>
-                                <th className="px-3 py-2 text-xs font-bold text-slate-500 text-center border border-gray-200">중고생(여)</th>
-                                <th className="px-3 py-2 text-xs font-bold text-slate-500 text-center border border-gray-200">어린이(남)</th>
-                                <th className="px-3 py-2 text-xs font-bold text-slate-500 text-center border border-gray-200">어린이(여)</th>
-                                <th className="px-3 py-2 text-xs font-bold text-slate-500 text-center border border-gray-200">삭제</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {performances.map((perf, index) => (
-                                <tr key={index} className="hover:bg-slate-50">
-                                    <td className="px-3 py-2 text-sm text-center border border-gray-200 font-bold text-slate-400">{index + 1}</td>
-                                    <td className="px-3 py-2 border border-gray-200">
-                                        <input
-                                            type="date"
-                                            min="2000-01-01"
-                                            max="2099-12-31"
-                                            value={perf.opDate}
-                                            onChange={(e) => handlePerformanceChange(index, 'opDate', e.target.value)}
-                                            className="w-full border-gray-300 rounded-md focus:ring-rose-500 focus:border-rose-500 text-sm py-1.5 px-2 text-center"
-                                        />
-                                    </td>
-                                    <td className="px-3 py-2 border border-gray-200">
-                                        <NumberInput
-                                            value={perf.adultM}
-                                            onChange={(val) => handlePerformanceNumberChange(index, 'adultM', val)}
-                                            className="w-full border-gray-300 rounded-md focus:ring-rose-500 focus:border-rose-500 text-sm py-1.5 px-2 text-right"
-                                        />
-                                    </td>
-                                    <td className="px-3 py-2 border border-gray-200">
-                                        <NumberInput
-                                            value={perf.adultF}
-                                            onChange={(val) => handlePerformanceNumberChange(index, 'adultF', val)}
-                                            className="w-full border-gray-300 rounded-md focus:ring-rose-500 focus:border-rose-500 text-sm py-1.5 px-2 text-right"
-                                        />
-                                    </td>
-                                    <td className="px-3 py-2 border border-gray-200">
-                                        <NumberInput
-                                            value={perf.teenM}
-                                            onChange={(val) => handlePerformanceNumberChange(index, 'teenM', val)}
-                                            className="w-full border-gray-300 rounded-md focus:ring-rose-500 focus:border-rose-500 text-sm py-1.5 px-2 text-right"
-                                        />
-                                    </td>
-                                    <td className="px-3 py-2 border border-gray-200">
-                                        <NumberInput
-                                            value={perf.teenF}
-                                            onChange={(val) => handlePerformanceNumberChange(index, 'teenF', val)}
-                                            className="w-full border-gray-300 rounded-md focus:ring-rose-500 focus:border-rose-500 text-sm py-1.5 px-2 text-right"
-                                        />
-                                    </td>
-                                    <td className="px-3 py-2 border border-gray-200">
-                                        <NumberInput
-                                            value={perf.childM}
-                                            onChange={(val) => handlePerformanceNumberChange(index, 'childM', val)}
-                                            className="w-full border-gray-300 rounded-md focus:ring-rose-500 focus:border-rose-500 text-sm py-1.5 px-2 text-right"
-                                        />
-                                    </td>
-                                    <td className="px-3 py-2 border border-gray-200">
-                                        <NumberInput
-                                            value={perf.childF}
-                                            onChange={(val) => handlePerformanceNumberChange(index, 'childF', val)}
-                                            className="w-full border-gray-300 rounded-md focus:ring-rose-500 focus:border-rose-500 text-sm py-1.5 px-2 text-right"
-                                        />
-                                    </td>
-                                    <td className="px-3 py-2 border border-gray-200 text-center">
-                                        <button
-                                            onClick={() => handleRowDeleteClick(index)}
-                                            className="p-2 text-gray-400 hover:text-red-500 rounded-full hover:bg-red-50 transition-colors"
-                                            title="행 삭제"
-                                        >
-                                            <Trash2 size={16} />
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-
             </div>
 
             {/* Box 4: Remarks */}
-            <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100 transition-shadow hover:shadow-lg">
-                <div className="flex items-center gap-2 mb-6 border-b border-gray-100 pb-2">
-                    <div className="h-6 w-1 bg-slate-500 rounded-full"></div>
-                    <h2 className="text-lg font-bold text-slate-800">비고</h2>
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mt-6 mb-8">
+                <div className="bg-[#f8edbe] px-4 py-2 border-b border-gray-200">
+                    <h3 className="font-semibold text-slate-800">비고</h3>
                 </div>
 
-                <div className="bg-slate-50 p-2 rounded-lg border border-slate-100">
+                <div className="p-4">
                     <textarea
-                        name="remark"
+                        rows={4}
                         value={overview.remark || ''}
-                        onChange={handleOverviewChange}
-                        maxLength={200}
-                        rows={3}
-                        className="w-full border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm p-3 bg-white resize-none"
-                        placeholder=""
+                        onChange={(e) => handleOverviewChange({ target: { name: 'remark', value: e.target.value } })}
+                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 bg-[#f8edbe] border border-slate-200 text-slate-800"
+                        placeholder="비고 사항을 입력하세요..."
                     />
-                    <div className="text-right text-xs text-slate-400 mt-1">
-                        {(overview.remark || '').length} / 200
-                    </div>
                 </div>
             </div>
 

@@ -394,12 +394,12 @@ export default function Categories() {
             if (hasV4) {
                 return (
                     <div className="flex gap-2 w-full">
-                        <span className={`flex-1 bg-[#f8edbe] px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v1}</span>
-                        <span className={`flex-1 bg-[#f8edbe] px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v2}</span>
-                        <span className={`flex-1 bg-[#f8edbe] px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v3}</span>
-                        <span className={`flex-1 bg-[#f8edbe] px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v4}</span>
-                        <span className={`flex-1 bg-[#f8edbe] px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v5}</span>
-                        <span className={`flex-1 bg-[#f8edbe] px-2 py-1 rounded text-sm text-slate-800 truncate text-right`}>
+                        <span className={`flex-1 bg-[#f8f0d2] px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v1}</span>
+                        <span className={`flex-1 bg-[#f8f0d2] px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v2}</span>
+                        <span className={`flex-1 bg-[#f8f0d2] px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v3}</span>
+                        <span className={`flex-1 bg-[#f8f0d2] px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v4}</span>
+                        <span className={`flex-1 bg-[#f8f0d2] px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v5}</span>
+                        <span className={`flex-1 bg-[#f8f0d2] px-2 py-1 rounded text-sm text-slate-800 truncate text-right`}>
                             {item.v6 ? (isNaN(item.v6.toString().replace(/,/g, '')) ? item.v6 : Number(item.v6.toString().replace(/,/g, '')).toLocaleString()) : ''}
                         </span>
                     </div>
@@ -407,14 +407,14 @@ export default function Categories() {
             }
             return (
                 <div className="flex gap-2 w-full">
-                    <span className={`flex-1 bg-[#f8edbe] px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v1}</span>
-                    <span className={`flex-1 bg-[#f8edbe] px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v2}</span>
-                    <span className={`flex-1 bg-[#f8edbe] px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v3}</span>
+                    <span className={`flex-1 bg-[#f8f0d2] px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v1}</span>
+                    <span className={`flex-1 bg-[#f8f0d2] px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v2}</span>
+                    <span className={`flex-1 bg-[#f8f0d2] px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v3}</span>
                 </div>
             );
         }
         return (
-            <div className={`w-full bg-[#f8edbe] px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>
+            <div className={`w-full bg-[#f8f0d2] px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>
                 {item}
             </div>
         );
@@ -458,7 +458,7 @@ export default function Categories() {
 
                     const headerClass = 'bg-[#f8edbe]';
                     // We will override theme.b for item backgrounds below
-                    const theme = { b: 'bg-[#f8edbe]' };
+                    const theme = { b: 'bg-[#f8f0d2]' };
 
                     return (
                         <div key={key} className={`bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col h-full hover:shadow-md transition-shadow ${className || ''}`}>

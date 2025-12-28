@@ -3,7 +3,7 @@ import { db } from '../services/db';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useYear } from '../context/YearContext';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Download } from 'lucide-react';
 
 export default function Calendar() {
     const navigate = useNavigate();
@@ -83,20 +83,19 @@ export default function Calendar() {
     const firstDay = getFirstDayOfMonth(year, month);
 
     const renderCalendarCells = () => {
-        const cells = [];
-
-        // Empty cells before first day
+        const days = [];
+        // Add empty slots for days before the first day of the month
         for (let i = 0; i < firstDay; i++) {
-            cells.push(<div key={`empty-${i}`} className="bg-slate-50 h-28 border border-slate-100"></div>);
+            days.push(
+                <div key={`empty-start-${i}`} className="min-h-[120px] bg-[#f8f0d2] border-b border-r border-gray-100 p-2"></div>
+            );
         }
-
-        // Days of the month
         for (let d = 1; d <= daysInMonth; d++) {
             const dateStr = `${year}-${(month + 1).toString().padStart(2, '0')}-${d.toString().padStart(2, '0')}`;
             const events = calendarData[dateStr] || [];
 
-            cells.push(
-                <div key={d} className="bg-white h-28 border border-slate-100 p-1 overflow-hidden hover:bg-slate-50 transition-colors relative group">
+            days.push(
+                <div key={d} className="bg-white min-h-[120px] border-b border-r border-gray-100 p-1 overflow-hidden hover:bg-slate-50 transition-colors relative group">
                     <div className="text-right text-xs font-semibold text-slate-500 mb-1 p-1">{d}</div>
                     <div className="space-y-1">
                         {events.slice(0, 2).map((evt, idx) => (
@@ -131,26 +130,78 @@ export default function Calendar() {
         const remainder = totalSlots % 7;
         const trailingEmpty = remainder === 0 ? 0 : 7 - remainder;
 
-        for (let i = 0; i < trailingEmpty; i++) {
-            cells.push(<div key={`empty-end-${i}`} className="bg-slate-50 h-28 border border-slate-100"></div>);
+        // Add empty slots for days after the last day of the month
+        const remainingCells = 35 - days.length; // Ensure 5 rows (7 * 5 = 35) or more
+        for (let i = 0; i < remainingCells; i++) {
+            days.push(
+                <div key={`empty-end-${i}`} className="min-h-[120px] bg-[#f8f0d2] border-b border-r border-gray-100 p-2"></div>
+            );
         }
+        return days;
+    };
 
-        return cells;
+    const getMonthData = async (date) => {
+        const year = date.getFullYear();
+        const month = date.getMonth();
+        const data = await db.getData(year, user?.libraryName);
+        return data.filter(entry => {
+            if (entry.overview?.startDate) {
+                const entryDate = new Date(entry.overview.startDate);
+                return entryDate.getFullYear() === year && entryDate.getMonth() === month;
+            }
+            return false;
+        });
+    };
+
+    const handleDownloadExcel = async () => {
+        if (!XLSX) return;
+
+        // Get month data
+        const monthData = await getMonthData(currentDate);
+
+        // Create Excel logic - Simplified list for Calendar view export or similar to Status?
+        // User asked for "like Statistics page, add Excel button".
+        // I will export the LIST of events for the current month.
+
+        const exportData = monthData.map(item => ({
+            '일자': item.overview.startDate,
+            '구분': item.overview.category,
+            '강좌명/행사명': item.overview.title,
+            '장소': item.overview.place,
+            '강사': item.overview.instructor,
+            '대상': item.overview.target,
+            '시간': `${item.overview.startTime} ~ ${item.overview.endTime}`
+        }));
+
+        const ws = XLSX.utils.json_to_sheet(exportData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "월간일정");
+        const today = new Date().toISOString().split('T')[0];
+        XLSX.writeFile(wb, `달력_${today}.xlsx`);
     };
 
     return (
         <div className="space-y-6 relative">
             {/* Calendar */}
             <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
-                <div className="flex justify-center items-center p-4 border-b border-gray-100 gap-4">
-                    <button onClick={handlePrevMonth} className="p-2 hover:bg-slate-100 rounded-full text-slate-600 transition-colors">
-                        <ChevronLeft size={24} />
-                    </button>
-                    <span className="text-2xl font-bold text-slate-800">
-                        {year}년 {month + 1}월
-                    </span>
-                    <button onClick={handleNextMonth} className="p-2 hover:bg-slate-100 rounded-full text-slate-600 transition-colors">
-                        <ChevronRight size={24} />
+                <div className="flex justify-between items-center p-4 border-b border-gray-100 gap-4">
+                    <div className="flex items-center gap-4 bg-white px-4 py-2 rounded-lg shadow-sm border border-gray-200">
+                        <button onClick={handlePrevMonth} className="p-1 hover:bg-slate-100 rounded-full transition-colors text-slate-600">
+                            <ChevronLeft size={24} />
+                        </button>
+                        <h2 className="text-xl font-bold text-slate-800 min-w-[140px] text-center">
+                            {currentDate.getFullYear()}년 {currentDate.getMonth() + 1}월
+                        </h2>
+                        <button onClick={handleNextMonth} className="p-1 hover:bg-slate-100 rounded-full transition-colors text-slate-600">
+                            <ChevronRight size={24} />
+                        </button>
+                    </div>
+                    <button
+                        onClick={handleDownloadExcel}
+                        className="flex items-center gap-2 bg-[#aaf376] text-slate-800 px-6 py-2.5 rounded-lg hover:bg-[#99e265] transition-all font-medium shadow-md hover:shadow-lg"
+                    >
+                        <Download size={18} />
+                        엑셀 저장
                     </button>
                 </div>
                 <div className="grid grid-cols-7 bg-[#f8edbe] border-b border-gray-200">

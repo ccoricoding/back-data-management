@@ -395,8 +395,8 @@ export default function Status() {
         ws['!cols'] = wscols;
 
         const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "현황");
-        XLSX.writeFile(wb, fileName);
+        const today = new Date().toISOString().split('T')[0];
+        XLSX.writeFile(wb, `현황_${today}.xlsx`);
     };
 
     return (
@@ -405,7 +405,7 @@ export default function Status() {
 
                 <button
                     onClick={handleDownloadExcel}
-                    className="flex items-center gap-2 bg-green-600 text-white px-6 py-2.5 rounded-lg hover:bg-green-700 transition-all font-medium shadow-md hover:shadow-lg"
+                    className="flex items-center gap-2 bg-[#aaf376] text-slate-800 px-6 py-2.5 rounded-lg hover:bg-[#99e265] transition-all font-medium shadow-md hover:shadow-lg"
                 >
                     <Download size={18} />
                     엑셀 저장
@@ -451,39 +451,24 @@ export default function Status() {
                                 </tr>
                             )}
                             {/* Summary Row */}
-                            < tr className="bg-indigo-50 font-bold border-t-2 border-indigo-200 text-indigo-700" >
-                                {
-                                    COLUMNS.map((col, idx) => {
-                                        if (idx === 0) return <td key={col.key} className="px-3 py-2 border border-gray-200 text-center text-xs">합계</td>;
-
-                                        // 요청사항: 제목(title) 열 하단에 건수 표시
-                                        if (col.key === 'title') {
-                                            return (
-                                                <td key={col.key} className="px-3 py-2 border border-gray-200 text-center text-xs text-indigo-700">
-                                                    {processedData.length.toLocaleString()} 개
-                                                </td>
-                                            );
+                            {/* Summary Row */}
+                            <tr className="bg-[#f8f0d2] font-bold text-slate-800">
+                                <td colSpan={2} className="px-3 py-2 border border-gray-200 text-center">합계</td>
+                                <td className="px-3 py-2 border border-gray-200 text-center">{filteredData.length}건</td>
+                                {COLUMNS.slice(3).map(col => (
+                                    <td key={col.key} className="px-3 py-2 border border-gray-200 text-center">
+                                        {col.key.includes('Budget') || col.key === 'totalBudget' ?
+                                            Number(filteredData.reduce((sum, item) => sum + (Number(item[col.key]) || 0), 0)).toLocaleString()
+                                            :
+                                            (col.key === 'title' ? '' : Number(filteredData.reduce((sum, item) => sum + (Number(item[col.key]) || 0), 0)).toLocaleString())
                                         }
-
-                                        if (col.sum) {
-                                            let unit = '명'; // Default to person count
-                                            if (col.key === 'count') unit = '회';
-                                            else if (col.key.startsWith('amt')) unit = '원';
-
-                                            return (
-                                                <td key={col.key} className={`px-3 py-2 border border-gray-200 text-xs ${col.align === 'center' ? 'text-center' : col.align === 'right' ? 'text-right' : 'text-left'}`}>
-                                                    {summaries[col.key]?.toLocaleString()} {unit}
-                                                </td>
-                                            );
-                                        }
-                                        return <td key={col.key} className="px-3 py-2 border border-gray-200"></td>;
-                                    })
-                                }
+                                    </td>
+                                ))}
                             </tr>
                         </tbody>
                     </table>
-                </div>
-            </div>
+                </div >
+            </div >
 
             {/* Filter Popup - Fixed Position Portal */}
             {
