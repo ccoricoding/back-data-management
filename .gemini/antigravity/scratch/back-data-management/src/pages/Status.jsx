@@ -415,7 +415,7 @@ export default function Status() {
             <div className="bg-white p-4 rounded-xl shadow-md border border-gray-100">
                 <div className="overflow-x-auto">
                     <table className="w-full min-w-max text-sm text-left text-gray-500 border-collapse">
-                        <thead className="bg-gray-50 text-xs text-gray-700 uppercase">
+                        <thead className="bg-[#d5f7c9] text-xs text-slate-800 uppercase font-bold">
                             <tr>
                                 {COLUMNS.map((col) => (
                                     <th key={col.key} className="px-3 py-2 border border-gray-200 whitespace-nowrap text-center">
@@ -423,7 +423,7 @@ export default function Status() {
                                             <span className="text-xs">{col.label}</span>
                                             <button
                                                 onClick={(e) => toggleFilterPopup(col.key, e)}
-                                                className={`p-0.5 rounded hover:bg-gray-200 ${activeFilterCol === col.key ? 'text-indigo-600 bg-indigo-50' : 'text-gray-400'}`}
+                                                className={`p-0.5 rounded hover:bg-black/10 transition-colors ${activeFilterCol === col.key ? 'text-indigo-600 bg-white/50' : 'text-slate-500'}`}
                                             >
                                                 <ChevronDown size={12} />
                                             </button>

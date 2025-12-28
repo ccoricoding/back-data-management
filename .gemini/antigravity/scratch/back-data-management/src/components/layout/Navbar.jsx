@@ -35,15 +35,15 @@ export default function Navbar() {
     };
 
     return (
-        <nav className="bg-sky-400 text-white shadow-lg fixed top-0 left-0 right-0 z-50">
+        <nav className="bg-[#d5f7c9] text-slate-800 shadow-lg fixed top-0 left-0 right-0 z-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     <div className="flex items-center gap-4">
-                        <div className="flex items-center bg-sky-500/50 rounded px-1.5 py-0.5">
+                        <div className="flex items-center bg-white/20 rounded px-1.5 py-0.5">
                             <select
                                 value={selectedYear}
                                 onChange={(e) => setSelectedYear(Number(e.target.value))}
-                                className="bg-transparent text-white text-xs font-semibold focus:outline-none cursor-pointer pr-1"
+                                className="bg-transparent text-slate-800 text-xs font-semibold focus:outline-none cursor-pointer pr-1"
                                 style={{ width: '70px' }}
                             >
                                 {[2022, 2023, 2024, 2025, 2026, 2027].map(y => (
@@ -62,8 +62,8 @@ export default function Navbar() {
                                     key={item.name}
                                     to={item.path}
                                     className={`flex items-center px-2 py-2 rounded-md text-xs font-medium transition-colors ${isActive(item.path)
-                                        ? 'bg-sky-500 text-white'
-                                        : 'text-sky-50 hover:bg-sky-500 hover:text-white'
+                                        ? 'bg-[#b6e8a4] text-slate-800'
+                                        : 'text-slate-700 hover:bg-[#b6e8a4] hover:text-slate-800'
                                         }`}
                                 >
                                     <item.icon className="w-3.5 h-3.5 mr-1.5" />
@@ -73,13 +73,13 @@ export default function Navbar() {
                         </div>
                     </div>
                     <div className="flex items-center">
-                        <span className="mr-4 text-sm text-sky-50">{user.name}님</span>
+                        <span className="mr-4 text-sm text-slate-700">{user.name}님</span>
                         <button
                             onClick={handleLogout}
-                            className="p-1 rounded-full text-sky-50 hover:bg-sky-500 focus:outline-none"
+                            className="p-1 rounded-full text-slate-700 hover:bg-[#b6e8a4] focus:outline-none"
                             title="로그아웃"
                         >
-                            <LogOut className="w-5 h-5" />
+                            <LogOut className="w-5 h-5 text-slate-700" />
                         </button>
                     </div>
                 </div>

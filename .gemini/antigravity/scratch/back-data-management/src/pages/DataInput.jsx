@@ -293,7 +293,7 @@ export default function DataInput() {
     // Wait, "빈칸이 하얗다는 걸 보이게 해줘" -> means the input field itself should be white, and the SURROUNDINGS should be colored.
     // So I will wrap all inputs in the Overview section in `bg-slate-50 rounded p-2` blocks.
 
-    const inputWrapperClass = "bg-slate-50 p-2 rounded-lg border border-slate-100";
+    const inputWrapperClass = "bg-[#d5f7c9] p-2 rounded-lg border border-slate-100";
     const selectClass = "w-full border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm py-2.5 text-center appearance-none bg-white";
     const inputClass = "w-full border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm py-2.5 px-3 text-center bg-white";
 
@@ -511,10 +511,9 @@ export default function DataInput() {
                     <div className="flex gap-2">
                         <button
                             onClick={addPerformanceRow}
-                            className="flex items-center gap-1 bg-indigo-50 text-indigo-700 border border-indigo-100 px-3 py-1.5 rounded-lg hover:bg-indigo-100 text-sm font-medium transition-all shadow-sm"
+                            className="flex items-center gap-1 bg-black text-white px-3 py-1.5 rounded-lg hover:bg-gray-800 transition-all shadow-sm justify-center"
                         >
                             <Plus size={16} />
-                            행 추가
                         </button>
                     </div>
                 </div>

@@ -263,19 +263,19 @@ export default function Statistics() {
                     <table className="min-w-full border-collapse">
                         <thead>
                             <tr>
-                                <Th rowSpan={2} className="sticky left-0 bg-slate-200 z-10 w-32">구분</Th>
-                                <Th colSpan={3} className="bg-indigo-100 text-indigo-900">성인</Th>
-                                <Th colSpan={3} className="bg-indigo-100 text-indigo-900">중고생</Th>
-                                <Th colSpan={3} className="bg-indigo-100 text-indigo-900">어린이</Th>
-                                <Th colSpan={3} className="bg-green-100 text-green-900">합계</Th>
+                                <Th rowSpan={2} className="sticky left-0 bg-[#d5f7c9] z-10 w-32 border-b border-white/50 text-slate-800">구분</Th>
+                                <Th colSpan={3} className="bg-[#d5f7c9] text-slate-800 border-b border-white/50">성인</Th>
+                                <Th colSpan={3} className="bg-[#d5f7c9] text-slate-800 border-b border-white/50">중고생</Th>
+                                <Th colSpan={3} className="bg-[#d5f7c9] text-slate-800 border-b border-white/50">어린이</Th>
+                                <Th colSpan={3} className="bg-[#d5f7c9] text-slate-800 border-b border-white/50">합계</Th>
                             </tr>
                             <tr>
-                                <Th className="bg-indigo-50 text-indigo-800">남</Th><Th className="bg-indigo-50 text-indigo-800">여</Th><Th className="bg-indigo-100 text-indigo-900 font-bold">소계</Th>
-                                <Th className="bg-indigo-50 text-indigo-800">남</Th><Th className="bg-indigo-50 text-indigo-800">여</Th><Th className="bg-indigo-100 text-indigo-900 font-bold">소계</Th>
-                                <Th className="bg-indigo-50 text-indigo-800">남</Th><Th className="bg-indigo-50 text-indigo-800">여</Th><Th className="bg-indigo-100 text-indigo-900 font-bold">소계</Th>
-                                <Th className="bg-green-50 text-green-900">남</Th>
-                                <Th className="bg-green-50 text-green-900">여</Th>
-                                <Th className="bg-green-100 text-green-900 font-bold">합계</Th>
+                                <Th className="bg-[#d5f7c9] text-slate-800">남</Th><Th className="bg-[#d5f7c9] text-slate-800">여</Th><Th className="bg-[#d5f7c9] text-slate-800 font-bold">소계</Th>
+                                <Th className="bg-[#d5f7c9] text-slate-800">남</Th><Th className="bg-[#d5f7c9] text-slate-800">여</Th><Th className="bg-[#d5f7c9] text-slate-800 font-bold">소계</Th>
+                                <Th className="bg-[#d5f7c9] text-slate-800">남</Th><Th className="bg-[#d5f7c9] text-slate-800">여</Th><Th className="bg-[#d5f7c9] text-slate-800 font-bold">소계</Th>
+                                <Th className="bg-[#d5f7c9] text-slate-800">남</Th>
+                                <Th className="bg-[#d5f7c9] text-slate-800">여</Th>
+                                <Th className="bg-[#d5f7c9] text-slate-800 font-bold">합계</Th>
                             </tr>
                         </thead>
                         <tbody>

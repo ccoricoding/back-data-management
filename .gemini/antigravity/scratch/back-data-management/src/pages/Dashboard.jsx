@@ -83,10 +83,10 @@ export default function Dashboard() {
         <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
             <div className={`${color} p-4`}>
                 <div className="flex items-center gap-3">
-                    <div className="bg-white/20 p-2 rounded-lg">
-                        <Icon className="text-white" size={24} />
+                    <div className="bg-white/40 p-2 rounded-lg">
+                        <Icon className="text-slate-800" size={24} />
                     </div>
-                    <h3 className="text-white font-bold text-lg">{title}</h3>
+                    <h3 className="text-slate-800 font-bold text-lg">{title}</h3>
                 </div>
             </div>
             <div className="p-4 grid grid-cols-2 gap-4">
@@ -118,14 +118,14 @@ export default function Dashboard() {
                     title="평생교육강좌"
                     icon={Lightbulb}
                     stats={summaryStats.education}
-                    color="bg-gradient-to-r from-indigo-500 to-indigo-600"
+                    color="bg-[#d5f7c9]"
                     labels={['강좌', '횟수']}
                 />
                 <StatCard
                     title="독서문화행사"
                     icon={BookOpen}
                     stats={summaryStats.event}
-                    color="bg-gradient-to-r from-emerald-500 to-emerald-600"
+                    color="bg-[#d5f7c9]"
                     labels={['행사', '횟수']}
                 />
             </div>

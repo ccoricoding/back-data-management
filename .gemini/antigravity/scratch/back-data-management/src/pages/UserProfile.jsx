@@ -101,7 +101,7 @@ export default function UserProfile() {
                         <h3 className="text-sm font-semibold text-gray-900 mb-3">비밀번호 변경</h3>
                         <div className="space-y-3">
                             <div>
-                                <label className="block text-xs font-medium text-gray-500">현재 비밀번호</label>
+                                <label className="block text-sm font-medium text-gray-700">현재 비밀번호</label>
                                 <input
                                     type="password"
                                     className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm"
@@ -110,7 +110,7 @@ export default function UserProfile() {
                                 />
                             </div>
                             <div>
-                                <label className="block text-xs font-medium text-gray-500">새 비밀번호</label>
+                                <label className="block text-sm font-medium text-gray-700">새 비밀번호</label>
                                 <input
                                     type="password"
                                     className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm"
@@ -119,7 +119,7 @@ export default function UserProfile() {
                                 />
                             </div>
                             <div>
-                                <label className="block text-xs font-medium text-gray-500">새 비밀번호 확인</label>
+                                <label className="block text-sm font-medium text-gray-700">새 비밀번호 확인</label>
                                 <input
                                     type="password"
                                     className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm"

@@ -394,12 +394,12 @@ export default function Categories() {
             if (hasV4) {
                 return (
                     <div className="flex gap-2 w-full">
-                        <span className={`flex-1 ${theme.b} px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v1}</span>
-                        <span className={`flex-1 ${theme.b} px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v2}</span>
-                        <span className={`flex-1 ${theme.b} px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v3}</span>
-                        <span className={`flex-1 ${theme.b} px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v4}</span>
-                        <span className={`flex-1 ${theme.b} px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v5}</span>
-                        <span className={`flex-1 ${theme.b} px-2 py-1 rounded text-sm text-slate-800 truncate text-right`}>
+                        <span className={`flex-1 bg-[#d5f7c9] px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v1}</span>
+                        <span className={`flex-1 bg-[#d5f7c9] px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v2}</span>
+                        <span className={`flex-1 bg-[#d5f7c9] px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v3}</span>
+                        <span className={`flex-1 bg-[#d5f7c9] px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v4}</span>
+                        <span className={`flex-1 bg-[#d5f7c9] px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v5}</span>
+                        <span className={`flex-1 bg-[#d5f7c9] px-2 py-1 rounded text-sm text-slate-800 truncate text-right`}>
                             {item.v6 ? (isNaN(item.v6.toString().replace(/,/g, '')) ? item.v6 : Number(item.v6.toString().replace(/,/g, '')).toLocaleString()) : ''}
                         </span>
                     </div>
@@ -407,14 +407,14 @@ export default function Categories() {
             }
             return (
                 <div className="flex gap-2 w-full">
-                    <span className={`flex-1 ${theme.b} px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v1}</span>
-                    <span className={`flex-1 ${theme.b} px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v2}</span>
-                    <span className={`flex-1 ${theme.b} px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v3}</span>
+                    <span className={`flex-1 bg-[#d5f7c9] px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v1}</span>
+                    <span className={`flex-1 bg-[#d5f7c9] px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v2}</span>
+                    <span className={`flex-1 bg-[#d5f7c9] px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v3}</span>
                 </div>
             );
         }
         return (
-            <div className={`w-full ${theme.b} px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>
+            <div className={`w-full bg-[#d5f7c9] px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>
                 {item}
             </div>
         );
@@ -455,45 +455,23 @@ export default function Categories() {
                     { key: '예산', title: '예산', className: 'lg:col-span-2' }
                 ].map(({ key, className }, index) => {
                     const items = categories[key] || [];
-                    const THEMES = [
-                        { h: 'bg-gray-50', b: 'bg-gray-50' }, // All gray headers like Status
-                        { h: 'bg-gray-50', b: 'bg-gray-50' },
-                        { h: 'bg-gray-50', b: 'bg-gray-50' },
-                        { h: 'bg-gray-50', b: 'bg-gray-50' },
-                        { h: 'bg-gray-50', b: 'bg-gray-50' },
-                        { h: 'bg-gray-50', b: 'bg-gray-50' },
-                    ];
-                    // Keep original theme logic for item body background if needed, but request said "background color... like Status header gray"
-                    // Status header is bg-gray-50.
-                    // The request: "Change the background color of 'Division', 'Weekday/Weekend', ... headers to gray like Status menu header cell."
-                    // This implies the {theme.h} part should be bg-gray-50. What about {theme.b}?
-                    // The user only said "headers". I will assume item backgrounds ({theme.b}) can remain colored or should they also be gray?
-                    // "카테고리의 구분... 예산을 배경색을 현황 메뉴의 헤더 셀 배경과 같은 회색으로 해줘" -> likely the header part of the card.
-                    // BUT "Categories" page has coloured cards.
-                    // Let's interpret "header" as the card header.
-                    // Actually, if I change card header to gray, the whole card loses its color identity.
-                    // But the user specifically listed 'Category', 'Weekday/Weekend' etc which are the CARD TITLES via key.
-                    // So I will change the `.h` part to `bg-gray-50`.
-                    // I'll keep `.b` colored for visual distinction of items, OR strict interpretation: user wants the specific elements mentioned (which are the headers of these sections) to be gray.
-                    // Let's force theme.h to be 'bg-gray-50'.
 
-                    // Wait, the code loops through themes.
-                    // I will override the theme usage for the HEADER div.
+                    const headerClass = 'bg-[#d5f7c9]'; // Updated to #d5f7c9 per request
+                    // We will override theme.b for item backgrounds below
+                    const theme = { b: 'bg-[#d5f7c9]' }; // Updated to #d5f7c9
 
-                    const theme = THEMES[index % THEMES.length];
-                    const headerClass = 'bg-slate-200'; // Darker gray per request
                     return (
                         <div key={key} className={`bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col h-full hover:shadow-md transition-shadow ${className || ''}`}>
                             <div className={`${headerClass} px-4 py-2 border-b border-gray-200 flex justify-between items-center`}>
-                                <h3 className="font-semibold text-slate-700">{key}</h3>
+                                <h3 className="font-semibold text-slate-800">{key}</h3>
                                 <button
                                     onClick={() => handleAddItem(key)}
-                                    className="text-indigo-600 hover:text-indigo-800 p-1 rounded-full hover:bg-indigo-50 transition-colors"
-                                    title="추가"
+                                    className="p-1 hover:bg-black/10 rounded transition-colors text-black"
                                 >
-                                    <Plus size={20} />
+                                    <Plus size={18} />
                                 </button>
                             </div>
+
                             <div className="p-4 flex-1 overflow-y-auto max-h-[400px] min-h-[200px]">
                                 {items.length === 0 ? (
                                     <div className="text-gray-400 text-sm text-center py-8 italic hidden">
@@ -571,32 +549,34 @@ export default function Categories() {
                         </div>
                     );
                 })}
-            </div>
+            </div >
 
             {/* Delete Confirmation Modal */}
-            {deleteConfirm.isOpen && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-lg p-6 shadow-xl w-full max-w-sm">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">
-                            해당 카테고리를 삭제하시겠습니까?
-                        </h3>
-                        <div className="flex gap-3 justify-center">
-                            <button
-                                onClick={() => setDeleteConfirm({ isOpen: false, categoryKey: null, index: null })}
-                                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 font-medium"
-                            >
-                                취소
-                            </button>
-                            <button
-                                onClick={confirmDelete}
-                                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 font-medium"
-                            >
-                                확인
-                            </button>
+            {
+                deleteConfirm.isOpen && (
+                    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                        <div className="bg-white rounded-lg p-6 shadow-xl w-full max-w-sm">
+                            <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">
+                                해당 카테고리를 삭제하시겠습니까?
+                            </h3>
+                            <div className="flex gap-3 justify-center">
+                                <button
+                                    onClick={() => setDeleteConfirm({ isOpen: false, categoryKey: null, index: null })}
+                                    className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 font-medium"
+                                >
+                                    취소
+                                </button>
+                                <button
+                                    onClick={confirmDelete}
+                                    className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 font-medium"
+                                >
+                                    확인
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )
+            }
+        </div >
     );
 }
