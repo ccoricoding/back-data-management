@@ -39,6 +39,13 @@ export default function Dashboard() {
                 });
                 setDbUsageLoaded(true);
 
+                if (data.debug_raw_project) {
+                    console.log('🔍 [DEBUG] FULL PROJECT METADATA:', data.debug_raw_project);
+                }
+                if (data.debug_raw) {
+                    console.log('🔍 [DEBUG] RAW API DATA:', data.debug_raw);
+                }
+
                 console.log(`DB Usage: ${data.usage.toFixed(2)}MB / ${data.limit}MB (${data.percentage.toFixed(1)}%)`);
             } catch (error) {
                 console.error('Failed to fetch database usage details:', error.message);
