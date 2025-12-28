@@ -13,26 +13,12 @@ export default function Statistics() {
     const [currentDate, setCurrentDate] = useState(new Date());
 
     const handlePrevMonth = () => {
-        const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
-        if (newDate.getFullYear() < selectedYear) return;
-        setCurrentDate(newDate);
+        setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
     };
 
     const handleNextMonth = () => {
-        const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
-        if (newDate.getFullYear() > selectedYear) return;
-        setCurrentDate(newDate);
+        setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
     };
-
-    // Update currentDate if selectedYear changes
-    useEffect(() => {
-        const now = new Date();
-        if (selectedYear === now.getFullYear()) {
-            setCurrentDate(new Date()); // Current year -> Current month
-        } else {
-            setCurrentDate(new Date(selectedYear, 0, 1)); // Other year -> Jan 1st
-        }
-    }, [selectedYear]);
 
     useEffect(() => {
         const loadData = async () => {
@@ -215,7 +201,7 @@ export default function Statistics() {
 
         XLSX.utils.book_append_sheet(wb, ws, "통계");
         const today = new Date().toISOString().split('T')[0];
-        XLSX.writeFile(wb, `통계_${today}.xlsx`);
+        XLSX.writeFile(wb, `백데이터_통계_${today}.xlsx`);
     };
 
     if (loading) return <div className="p-8 text-center"></div>;
@@ -238,7 +224,7 @@ export default function Statistics() {
             <div className="flex justify-end mb-4">
                 <button
                     onClick={handleDownloadExcel}
-                    className="flex items-center gap-2 bg-[#aaf376] text-slate-800 px-6 py-2.5 rounded-lg hover:bg-[#99e265] transition-all font-medium shadow-md hover:shadow-lg"
+                    className="flex items-center gap-2 bg-green-600 text-white px-6 py-2.5 rounded-lg hover:bg-green-700 transition-all font-medium shadow-md hover:shadow-lg"
                 >
                     <Download size={18} />
                     엑셀 저장
@@ -246,16 +232,16 @@ export default function Statistics() {
             </div>
 
             {/* Month Navigation */}
-            <div className="flex justify-center mb-6">
-                <div className="flex items-center gap-4 bg-white px-4 py-2 rounded-lg shadow-sm border border-gray-200">
-                    <button onClick={prevMonth} className="p-1 hover:bg-slate-100 rounded-full transition-colors text-slate-600">
-                        <ChevronLeft size={24} />
-                    </button>
-                    <h2 className="text-xl font-bold text-slate-800 min-w-[140px] text-center"> {year}년 {month}월</h2>
-                    <button onClick={nextMonth} className="p-1 hover:bg-slate-100 rounded-full transition-colors text-slate-600">
-                        <ChevronRight size={24} />
-                    </button>
-                </div>
+            <div className="flex items-center justify-center gap-4 mb-6">
+                <button onClick={handlePrevMonth} className="p-2 hover:bg-slate-100 rounded-full text-slate-600 transition-colors">
+                    <ChevronLeft size={24} />
+                </button>
+                <span className="text-2xl font-bold text-slate-800">
+                    {currentDate.getFullYear()}년 {currentDate.getMonth() + 1}월
+                </span>
+                <button onClick={handleNextMonth} className="p-2 hover:bg-slate-100 rounded-full text-slate-600 transition-colors">
+                    <ChevronRight size={24} />
+                </button>
             </div>
 
             <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
@@ -263,72 +249,72 @@ export default function Statistics() {
                     <table className="min-w-full border-collapse">
                         <thead>
                             <tr>
-                                <Th rowSpan={2} className="sticky left-0 bg-slate-200 z-10 w-32 border-b border-white/50 text-slate-800">구분</Th>
-                                <Th colSpan={3} className="bg-[#f8edbe] text-slate-800 border-b border-white/50">성인</Th>
-                                <Th colSpan={3} className="bg-[#f8edbe] text-slate-800 border-b border-white/50">중고생</Th>
-                                <Th colSpan={3} className="bg-[#f8edbe] text-slate-800 border-b border-white/50">어린이</Th>
-                                <Th colSpan={3} className="bg-green-100 text-slate-800 border-b border-green-200">합계</Th>
+                                <Th rowSpan={2} className="sticky left-0 bg-gray-50 z-10 w-32">구분</Th>
+                                <Th colSpan={3} className="bg-indigo-100 text-indigo-900">성인</Th>
+                                <Th colSpan={3} className="bg-indigo-100 text-indigo-900">중고생</Th>
+                                <Th colSpan={3} className="bg-indigo-100 text-indigo-900">어린이</Th>
+                                <Th colSpan={3} className="bg-green-100 text-green-900">합계</Th>
                             </tr>
                             <tr>
-                                <Th className="bg-[#fcf8e9] text-slate-800">남</Th><Th className="bg-[#fcf8e9] text-slate-800">여</Th><Th className="bg-[#f8edbe] text-slate-800 font-bold">소계</Th>
-                                <Th className="bg-[#fcf8e9] text-slate-800">남</Th><Th className="bg-[#fcf8e9] text-slate-800">여</Th><Th className="bg-[#f8edbe] text-slate-800 font-bold">소계</Th>
-                                <Th className="bg-[#fcf8e9] text-slate-800">남</Th><Th className="bg-[#fcf8e9] text-slate-800">여</Th><Th className="bg-[#f8edbe] text-slate-800 font-bold">소계</Th>
-                                <Th className="bg-green-50 text-slate-800">남</Th>
-                                <Th className="bg-green-50 text-slate-800">여</Th>
-                                <Th className="bg-green-100 text-slate-800 font-bold">합계</Th>
+                                <Th className="bg-indigo-50 text-indigo-800">남</Th><Th className="bg-indigo-50 text-indigo-800">여</Th><Th className="bg-indigo-100 text-indigo-900 font-bold">소계</Th>
+                                <Th className="bg-indigo-50 text-indigo-800">남</Th><Th className="bg-indigo-50 text-indigo-800">여</Th><Th className="bg-indigo-100 text-indigo-900 font-bold">소계</Th>
+                                <Th className="bg-indigo-50 text-indigo-800">남</Th><Th className="bg-indigo-50 text-indigo-800">여</Th><Th className="bg-indigo-100 text-indigo-900 font-bold">소계</Th>
+                                <Th className="bg-green-50 text-green-900">남</Th>
+                                <Th className="bg-green-50 text-green-900">여</Th>
+                                <Th className="bg-green-100 text-green-900 font-bold">합계</Th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td className="px-4 py-3 text-sm text-gray-700 bg-slate-50 sticky left-0 text-center border-b border-gray-100 font-bold tracking-wider">
-                                    <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">평생교육강좌</span>
+                                <td className="px-4 py-3 text-sm text-gray-700 bg-white sticky left-0 text-center border-b border-gray-100">
+                                    평생교육강좌
                                 </td>
                                 <Td>{stats.edu.adultM}</Td>
                                 <Td>{stats.edu.adultF}</Td>
-                                <Td className="bg-[#f8edbe] font-bold text-slate-800">{stats.edu.adultSum}</Td>
+                                <Td className="bg-indigo-50 font-semibold">{stats.edu.adultSum}</Td>
                                 <Td>{stats.edu.teenM}</Td>
                                 <Td>{stats.edu.teenF}</Td>
-                                <Td className="bg-[#f8edbe] font-bold text-slate-800">{stats.edu.teenSum}</Td>
+                                <Td className="bg-indigo-50 font-semibold">{stats.edu.teenSum}</Td>
                                 <Td>{stats.edu.childM}</Td>
                                 <Td>{stats.edu.childF}</Td>
-                                <Td className="bg-[#f8edbe] font-bold text-slate-800">{stats.edu.childSum}</Td>
+                                <Td className="bg-indigo-50 font-semibold">{stats.edu.childSum}</Td>
                                 <Td>{stats.edu.maleSum}</Td>
                                 <Td>{stats.edu.femaleSum}</Td>
-                                <Td className="bg-green-50 font-bold text-slate-800">{stats.edu.total}</Td>
+                                <Td className="bg-green-50 text-green-700 font-bold ">{stats.edu.total}</Td>
                             </tr>
                             <tr>
-                                <td className="px-4 py-3 text-sm text-gray-700 bg-slate-50 sticky left-0 text-center border-b border-gray-100 font-bold tracking-wider">
-                                    <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">독서문화행사</span>
+                                <td className="px-4 py-3 text-sm text-gray-700 bg-white sticky left-0 text-center border-b border-gray-100">
+                                    독서문화행사
                                 </td>
                                 <Td>{stats.event.adultM}</Td>
                                 <Td>{stats.event.adultF}</Td>
-                                <Td className="bg-[#f8edbe] font-bold text-slate-800">{stats.event.adultSum}</Td>
+                                <Td className="bg-indigo-50 font-semibold">{stats.event.adultSum}</Td>
                                 <Td>{stats.event.teenM}</Td>
                                 <Td>{stats.event.teenF}</Td>
-                                <Td className="bg-[#f8edbe] font-bold text-slate-800">{stats.event.teenSum}</Td>
+                                <Td className="bg-indigo-50 font-semibold">{stats.event.teenSum}</Td>
                                 <Td>{stats.event.childM}</Td>
                                 <Td>{stats.event.childF}</Td>
-                                <Td className="bg-[#f8edbe] font-bold text-slate-800">{stats.event.childSum}</Td>
+                                <Td className="bg-indigo-50 font-semibold">{stats.event.childSum}</Td>
                                 <Td>{stats.event.maleSum}</Td>
                                 <Td>{stats.event.femaleSum}</Td>
-                                <Td className="bg-green-50 font-bold text-slate-800">{stats.event.total}</Td>
+                                <Td className="bg-green-50 text-green-700 font-bold ">{stats.event.total}</Td>
                             </tr>
                             <tr className="bg-slate-100">
-                                <td className="px-4 py-3 text-sm text-gray-700 bg-slate-200 sticky left-0 text-center border-t border-gray-200 font-bold tracking-wider">
-                                    <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">합계</span>
+                                <td className="px-4 py-3 text-sm text-gray-700 bg-gray-50 sticky left-0 text-center border-t border-gray-200">
+                                    합계
                                 </td>
                                 <Td isTotal>{stats.total.adultM}</Td>
                                 <Td isTotal>{stats.total.adultF}</Td>
-                                <Td className="bg-[#f8edbe] font-bold text-slate-800">{stats.total.adultSum}</Td>
+                                <Td className="bg-indigo-100 font-bold">{stats.total.adultSum}</Td>
                                 <Td isTotal>{stats.total.teenM}</Td>
                                 <Td isTotal>{stats.total.teenF}</Td>
-                                <Td className="bg-[#f8edbe] font-bold text-slate-800">{stats.total.teenSum}</Td>
+                                <Td className="bg-indigo-100 font-bold">{stats.total.teenSum}</Td>
                                 <Td isTotal>{stats.total.childM}</Td>
                                 <Td isTotal>{stats.total.childF}</Td>
-                                <Td className="bg-[#f8edbe] font-bold text-slate-800">{stats.total.childSum}</Td>
+                                <Td className="bg-indigo-100 font-bold">{stats.total.childSum}</Td>
                                 <Td isTotal>{stats.total.maleSum}</Td>
                                 <Td isTotal>{stats.total.femaleSum}</Td>
-                                <Td className="bg-green-100 font-black text-lg text-slate-800">{stats.total.total}</Td>
+                                <Td className="bg-green-100 text-green-800 font-black  text-lg">{stats.total.total}</Td>
                             </tr>
                         </tbody>
                     </table>

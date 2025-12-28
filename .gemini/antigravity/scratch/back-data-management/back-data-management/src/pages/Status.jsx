@@ -395,8 +395,8 @@ export default function Status() {
         ws['!cols'] = wscols;
 
         const wb = XLSX.utils.book_new();
-        const today = new Date().toISOString().split('T')[0];
-        XLSX.writeFile(wb, `현황_${today}.xlsx`);
+        XLSX.utils.book_append_sheet(wb, ws, "현황");
+        XLSX.writeFile(wb, fileName);
     };
 
     return (
@@ -405,7 +405,7 @@ export default function Status() {
 
                 <button
                     onClick={handleDownloadExcel}
-                    className="flex items-center gap-2 bg-[#aaf376] text-slate-800 px-6 py-2.5 rounded-lg hover:bg-[#99e265] transition-all font-medium shadow-md hover:shadow-lg"
+                    className="flex items-center gap-2 bg-green-600 text-white px-6 py-2.5 rounded-lg hover:bg-green-700 transition-all font-medium shadow-md hover:shadow-lg"
                 >
                     <Download size={18} />
                     엑셀 저장
@@ -415,7 +415,7 @@ export default function Status() {
             <div className="bg-white p-4 rounded-xl shadow-md border border-gray-100">
                 <div className="overflow-x-auto">
                     <table className="w-full min-w-max text-sm text-left text-gray-500 border-collapse">
-                        <thead className="bg-[#f8edbe] text-xs text-slate-800 uppercase font-bold">
+                        <thead className="bg-gray-50 text-xs text-gray-700 uppercase">
                             <tr>
                                 {COLUMNS.map((col) => (
                                     <th key={col.key} className="px-3 py-2 border border-gray-200 whitespace-nowrap text-center">
@@ -423,7 +423,7 @@ export default function Status() {
                                             <span className="text-xs">{col.label}</span>
                                             <button
                                                 onClick={(e) => toggleFilterPopup(col.key, e)}
-                                                className={`p-0.5 rounded hover:bg-black/10 transition-colors ${activeFilterCol === col.key ? 'text-indigo-600 bg-white/50' : 'text-slate-500'}`}
+                                                className={`p-0.5 rounded hover:bg-gray-200 ${activeFilterCol === col.key ? 'text-indigo-600 bg-indigo-50' : 'text-gray-400'}`}
                                             >
                                                 <ChevronDown size={12} />
                                             </button>
@@ -447,127 +447,138 @@ export default function Status() {
                                 </tr>
                             )) : (
                                 <tr>
-                                    {/* Empty row hidden as requested */}
+                                    <td colSpan={COLUMNS.length} className="px-4 py-8 text-center text-gray-400">
+                                        데이터가 없습니다.
+                                    </td>
                                 </tr>
                             )}
                             {/* Summary Row */}
-                            {/* Summary Row */}
-                            <tr className="bg-[#f8f0d2] font-bold text-slate-800">
-                                <td colSpan={2} className="px-3 py-2 border border-gray-200 text-center">합계</td>
-                                <td className="px-3 py-2 border border-gray-200 text-center">{filteredData.length}건</td>
-                                {COLUMNS.slice(3).map(col => (
-                                    <td key={col.key} className="px-3 py-2 border border-gray-200 text-center">
-                                        {col.key.includes('Budget') || col.key === 'totalBudget' ?
-                                            Number(filteredData.reduce((sum, item) => sum + (Number(item[col.key]) || 0), 0)).toLocaleString()
-                                            :
-                                            (col.key === 'title' ? '' : Number(filteredData.reduce((sum, item) => sum + (Number(item[col.key]) || 0), 0)).toLocaleString())
-                                        }
-                                    </td>
-                                ))}
+                            <tr className="bg-indigo-50 font-bold border-t-2 border-indigo-200 text-indigo-700">
+                                {COLUMNS.map((col, idx) => {
+                                    if (idx === 0) return <td key={col.key} className="px-3 py-2 border border-gray-200 text-center text-xs">합계</td>;
+
+                                    // 요청사항: 제목(title) 열 하단에 건수 표시
+                                    if (col.key === 'title') {
+                                        return (
+                                            <td key={col.key} className="px-3 py-2 border border-gray-200 text-center text-xs text-indigo-700">
+                                                {processedData.length.toLocaleString()} 개
+                                            </td>
+                                        );
+                                    }
+
+                                    if (col.sum) {
+                                        let unit = '명'; // Default to person count
+                                        if (col.key === 'count') unit = '회';
+                                        else if (col.key.startsWith('amt')) unit = '원';
+
+                                        return (
+                                            <td key={col.key} className={`px-3 py-2 border border-gray-200 text-xs ${col.align === 'center' ? 'text-center' : col.align === 'right' ? 'text-right' : 'text-left'}`}>
+                                                {summaries[col.key]?.toLocaleString()} {unit}
+                                            </td>
+                                        );
+                                    }
+                                    return <td key={col.key} className="px-3 py-2 border border-gray-200"></td>;
+                                })}
                             </tr>
                         </tbody>
                     </table>
-                </div >
-            </div >
+                </div>
+            </div>
 
             {/* Filter Popup - Fixed Position Portal */}
-            {
-                activeFilterCol && activeCol && (
-                    <div
-                        ref={popupRef}
-                        className="fixed bg-white rounded-lg shadow-2xl border border-gray-200 z-[100] p-3"
-                        style={{
-                            left: filterPosition.x,
-                            top: filterPosition.y,
-                            width: 260,
-                            maxHeight: 'calc(100vh - 100px)'
-                        }}
-                    >
-                        <div className="flex justify-between items-center mb-2 pb-2 border-b border-gray-100">
-                            <span className="font-semibold text-sm text-gray-700">{activeCol.label}</span>
-                            <button onClick={() => setActiveFilterCol(null)} className="text-gray-400 hover:text-gray-600">✕</button>
-                        </div>
+            {activeFilterCol && activeCol && (
+                <div
+                    ref={popupRef}
+                    className="fixed bg-white rounded-lg shadow-2xl border border-gray-200 z-[100] p-3"
+                    style={{
+                        left: filterPosition.x,
+                        top: filterPosition.y,
+                        width: 260,
+                        maxHeight: 'calc(100vh - 100px)'
+                    }}
+                >
+                    <div className="flex justify-between items-center mb-2 pb-2 border-b border-gray-100">
+                        <span className="font-semibold text-sm text-gray-700">{activeCol.label}</span>
+                        <button onClick={() => setActiveFilterCol(null)} className="text-gray-400 hover:text-gray-600">✕</button>
+                    </div>
 
-                        <div className="flex flex-col gap-1 mb-2 border-b border-gray-100 pb-2">
-                            <button onClick={() => handleSortChange(activeFilterCol, 'asc')} className="flex items-center gap-2 px-2 py-1.5 hover:bg-gray-50 rounded text-left text-gray-700">
-                                <span className="text-xs">오름차순 정렬</span>
-                            </button>
-                            <button onClick={() => handleSortChange(activeFilterCol, 'desc')} className="flex items-center gap-2 px-2 py-1.5 hover:bg-gray-50 rounded text-left text-gray-700">
-                                <span className="text-xs">내림차순 정렬</span>
-                            </button>
-                        </div>
+                    <div className="flex flex-col gap-1 mb-2 border-b border-gray-100 pb-2">
+                        <button onClick={() => handleSortChange(activeFilterCol, 'asc')} className="flex items-center gap-2 px-2 py-1.5 hover:bg-gray-50 rounded text-left text-gray-700">
+                            <span className="text-xs">오름차순 정렬</span>
+                        </button>
+                        <button onClick={() => handleSortChange(activeFilterCol, 'desc')} className="flex items-center gap-2 px-2 py-1.5 hover:bg-gray-50 rounded text-left text-gray-700">
+                            <span className="text-xs">내림차순 정렬</span>
+                        </button>
+                    </div>
 
-                        <div className="mb-2">
-                            <div className="relative">
-                                <input
-                                    type="text"
-                                    placeholder="검색"
-                                    value={filters[activeFilterCol]?.search || ''}
-                                    onChange={(e) => handleFilterSearchChange(activeFilterCol, e.target.value)}
-                                    className="w-full text-xs p-2 pl-8 border border-gray-300 rounded focus:ring-1 focus:ring-indigo-500"
-                                />
-                                <Filter size={12} className="absolute left-2.5 top-2.5 text-gray-400" />
-                            </div>
-                        </div>
-
-                        <div className="max-h-48 overflow-y-auto border border-gray-100 rounded">
-                            <label className="flex items-center px-2 py-1.5 hover:bg-gray-50 cursor-pointer">
-                                <input
-                                    type="checkbox"
-                                    className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 mr-2"
-                                    checked={filters[activeFilterCol]?.selected?.size === getUniqueValues(rawData, activeFilterCol).length}
-                                    onChange={(e) => handleSelectAll(activeFilterCol, e.target.checked, getUniqueValues(rawData, activeFilterCol))}
-                                />
-                                <span className="text-xs leading-none">(모두 선택)</span>
-                            </label>
-
-                            {getUniqueValues(rawData, activeFilterCol)
-                                .filter(val => val.toLowerCase().includes((filters[activeFilterCol]?.search || '').toLowerCase()))
-                                .map(val => (
-                                    <label key={val} className="flex items-center px-2 py-1.5 hover:bg-gray-50 cursor-pointer">
-                                        <input
-                                            type="checkbox"
-                                            className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 mr-2"
-                                            checked={filters[activeFilterCol]?.selected?.has(val) || false}
-                                            onChange={(e) => handleFilterCheckboxChange(activeFilterCol, val, e.target.checked)}
-                                        />
-                                        <span className="text-xs leading-none truncate">{val}</span>
-                                    </label>
-                                ))}
+                    <div className="mb-2">
+                        <div className="relative">
+                            <input
+                                type="text"
+                                placeholder="검색"
+                                value={filters[activeFilterCol]?.search || ''}
+                                onChange={(e) => handleFilterSearchChange(activeFilterCol, e.target.value)}
+                                className="w-full text-xs p-2 pl-8 border border-gray-300 rounded focus:ring-1 focus:ring-indigo-500"
+                            />
+                            <Filter size={12} className="absolute left-2.5 top-2.5 text-gray-400" />
                         </div>
                     </div>
-                )
-            }
+
+                    <div className="max-h-48 overflow-y-auto border border-gray-100 rounded">
+                        <label className="flex items-center px-2 py-1.5 hover:bg-gray-50 cursor-pointer">
+                            <input
+                                type="checkbox"
+                                className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 mr-2"
+                                checked={filters[activeFilterCol]?.selected?.size === getUniqueValues(rawData, activeFilterCol).length}
+                                onChange={(e) => handleSelectAll(activeFilterCol, e.target.checked, getUniqueValues(rawData, activeFilterCol))}
+                            />
+                            <span className="text-xs leading-none">(모두 선택)</span>
+                        </label>
+
+                        {getUniqueValues(rawData, activeFilterCol)
+                            .filter(val => val.toLowerCase().includes((filters[activeFilterCol]?.search || '').toLowerCase()))
+                            .map(val => (
+                                <label key={val} className="flex items-center px-2 py-1.5 hover:bg-gray-50 cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 mr-2"
+                                        checked={filters[activeFilterCol]?.selected?.has(val) || false}
+                                        onChange={(e) => handleFilterCheckboxChange(activeFilterCol, val, e.target.checked)}
+                                    />
+                                    <span className="text-xs leading-none truncate">{val}</span>
+                                </label>
+                            ))}
+                    </div>
+                </div>
+            )}
 
             {/* Edit Confirmation Modal */}
-            {
-                editConfirm.isOpen && (
-                    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100]">
-                        <div className="bg-white rounded-lg p-6 shadow-xl w-full max-w-sm">
-                            <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">
-                                해당 데이터를 수정하시겠습니까?
-                            </h3>
-                            <div className="flex gap-3 justify-center">
-                                <button
-                                    onClick={() => setEditConfirm({ isOpen: false, itemId: null })}
-                                    className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 font-medium"
-                                >
-                                    취소
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        navigate(`/input?id=${editConfirm.itemId}`);
-                                        setEditConfirm({ isOpen: false, itemId: null });
-                                    }}
-                                    className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 font-medium"
-                                >
-                                    확인
-                                </button>
-                            </div>
+            {editConfirm.isOpen && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100]">
+                    <div className="bg-white rounded-lg p-6 shadow-xl w-full max-w-sm">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">
+                            해당 데이터를 수정하시겠습니까?
+                        </h3>
+                        <div className="flex gap-3 justify-center">
+                            <button
+                                onClick={() => setEditConfirm({ isOpen: false, itemId: null })}
+                                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 font-medium"
+                            >
+                                취소
+                            </button>
+                            <button
+                                onClick={() => {
+                                    navigate(`/input?id=${editConfirm.itemId}`);
+                                    setEditConfirm({ isOpen: false, itemId: null });
+                                }}
+                                className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 font-medium"
+                            >
+                                확인
+                            </button>
                         </div>
                     </div>
-                )
-            }
-        </div >
+                </div>
+            )}
+        </div>
     );
 }

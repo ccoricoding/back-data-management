@@ -394,12 +394,12 @@ export default function Categories() {
             if (hasV4) {
                 return (
                     <div className="flex gap-2 w-full">
-                        <span className={`flex-1 bg-[#f8f0d2] px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v1}</span>
-                        <span className={`flex-1 bg-[#f8f0d2] px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v2}</span>
-                        <span className={`flex-1 bg-[#f8f0d2] px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v3}</span>
-                        <span className={`flex-1 bg-[#f8f0d2] px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v4}</span>
-                        <span className={`flex-1 bg-[#f8f0d2] px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v5}</span>
-                        <span className={`flex-1 bg-[#f8f0d2] px-2 py-1 rounded text-sm text-slate-800 truncate text-right`}>
+                        <span className={`flex-1 ${theme.b} px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v1}</span>
+                        <span className={`flex-1 ${theme.b} px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v2}</span>
+                        <span className={`flex-1 ${theme.b} px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v3}</span>
+                        <span className={`flex-1 ${theme.b} px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v4}</span>
+                        <span className={`flex-1 ${theme.b} px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v5}</span>
+                        <span className={`flex-1 ${theme.b} px-2 py-1 rounded text-sm text-slate-800 truncate text-right`}>
                             {item.v6 ? (isNaN(item.v6.toString().replace(/,/g, '')) ? item.v6 : Number(item.v6.toString().replace(/,/g, '')).toLocaleString()) : ''}
                         </span>
                     </div>
@@ -407,14 +407,14 @@ export default function Categories() {
             }
             return (
                 <div className="flex gap-2 w-full">
-                    <span className={`flex-1 bg-[#f8f0d2] px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v1}</span>
-                    <span className={`flex-1 bg-[#f8f0d2] px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v2}</span>
-                    <span className={`flex-1 bg-[#f8f0d2] px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v3}</span>
+                    <span className={`flex-1 ${theme.b} px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v1}</span>
+                    <span className={`flex-1 ${theme.b} px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v2}</span>
+                    <span className={`flex-1 ${theme.b} px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>{item.v3}</span>
                 </div>
             );
         }
         return (
-            <div className={`w-full bg-[#f8f0d2] px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>
+            <div className={`w-full ${theme.b} px-2 py-1 rounded text-sm text-slate-800 truncate text-center`}>
                 {item}
             </div>
         );
@@ -455,27 +455,34 @@ export default function Categories() {
                     { key: '예산', title: '예산', className: 'lg:col-span-2' }
                 ].map(({ key, className }, index) => {
                     const items = categories[key] || [];
-
-                    const headerClass = 'bg-[#f8edbe]';
-                    // We will override theme.b for item backgrounds below
-                    const theme = { b: 'bg-[#f8f0d2]' };
-
+                    const THEMES = [
+                        { h: 'bg-red-100', b: 'bg-red-50' }, { h: 'bg-orange-100', b: 'bg-orange-50' },
+                        { h: 'bg-amber-100', b: 'bg-amber-50' }, { h: 'bg-yellow-100', b: 'bg-yellow-50' },
+                        { h: 'bg-lime-100', b: 'bg-lime-50' }, { h: 'bg-green-100', b: 'bg-green-50' },
+                        { h: 'bg-emerald-100', b: 'bg-emerald-50' }, { h: 'bg-teal-100', b: 'bg-teal-50' },
+                        { h: 'bg-cyan-100', b: 'bg-cyan-50' }, { h: 'bg-sky-100', b: 'bg-sky-50' },
+                        { h: 'bg-blue-100', b: 'bg-blue-50' }, { h: 'bg-indigo-100', b: 'bg-indigo-50' },
+                        { h: 'bg-violet-100', b: 'bg-violet-50' }, { h: 'bg-purple-100', b: 'bg-purple-50' },
+                        { h: 'bg-fuchsia-100', b: 'bg-fuchsia-50' }, { h: 'bg-pink-100', b: 'bg-pink-50' },
+                        { h: 'bg-rose-100', b: 'bg-rose-50' }
+                    ];
+                    const theme = THEMES[index % THEMES.length];
                     return (
                         <div key={key} className={`bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col h-full hover:shadow-md transition-shadow ${className || ''}`}>
-                            <div className={`${headerClass} px-4 py-2 border-b border-gray-200 flex justify-between items-center`}>
-                                <h3 className="font-semibold text-slate-800">{key}</h3>
+                            <div className={`${theme.h} p-4 border-b border-gray-100 flex justify-between items-center`}>
+                                <h3 className="font-semibold text-slate-700">{key}</h3>
                                 <button
                                     onClick={() => handleAddItem(key)}
-                                    className="p-1 hover:bg-black/10 rounded transition-colors text-black"
+                                    className="text-indigo-600 hover:text-indigo-800 p-1 rounded-full hover:bg-indigo-50 transition-colors"
+                                    title="추가"
                                 >
-                                    <Plus size={18} />
+                                    <Plus size={20} />
                                 </button>
                             </div>
-
                             <div className="p-4 flex-1 overflow-y-auto max-h-[400px] min-h-[200px]">
                                 {items.length === 0 ? (
-                                    <div className="text-gray-400 text-sm text-center py-8 italic hidden">
-                                        {/* Empty state hidden as requested */}
+                                    <div className="text-gray-400 text-sm text-center py-8 italic">
+                                        등록된 항목이 없습니다
                                     </div>
                                 ) : (
                                     <>
@@ -549,34 +556,32 @@ export default function Categories() {
                         </div>
                     );
                 })}
-            </div >
+            </div>
 
             {/* Delete Confirmation Modal */}
-            {
-                deleteConfirm.isOpen && (
-                    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                        <div className="bg-white rounded-lg p-6 shadow-xl w-full max-w-sm">
-                            <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">
-                                해당 카테고리를 삭제하시겠습니까?
-                            </h3>
-                            <div className="flex gap-3 justify-center">
-                                <button
-                                    onClick={() => setDeleteConfirm({ isOpen: false, categoryKey: null, index: null })}
-                                    className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 font-medium"
-                                >
-                                    취소
-                                </button>
-                                <button
-                                    onClick={confirmDelete}
-                                    className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 font-medium"
-                                >
-                                    확인
-                                </button>
-                            </div>
+            {deleteConfirm.isOpen && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-lg p-6 shadow-xl w-full max-w-sm">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">
+                            해당 카테고리를 삭제하시겠습니까?
+                        </h3>
+                        <div className="flex gap-3 justify-center">
+                            <button
+                                onClick={() => setDeleteConfirm({ isOpen: false, categoryKey: null, index: null })}
+                                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 font-medium"
+                            >
+                                취소
+                            </button>
+                            <button
+                                onClick={confirmDelete}
+                                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 font-medium"
+                            >
+                                확인
+                            </button>
                         </div>
                     </div>
-                )
-            }
-        </div >
+                </div>
+            )}
+        </div>
     );
 }
